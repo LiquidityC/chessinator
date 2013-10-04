@@ -1,0 +1,4 @@
+io.log
+*.o
+chess
+xboard.debug
