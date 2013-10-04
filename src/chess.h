@@ -7,7 +7,7 @@ namespace cengine
 	{
 		public:
 
-			Chess();
+			Chess() { };
 
 			~Chess() { };
 

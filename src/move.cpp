@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "move.h"
 
@@ -9,13 +10,14 @@ namespace cengine
 
 	}
 
-	void Move::print_move() const
+	std::string Move::as_string() const
 	{
-		std::cout << "Move: " << from << " -> " << too << std::endl;
-
+		std::stringstream ss;
+		ss << from << too;
+		return ss.str();
 	}
 
-	std::ostream& operator<<(std::ostream& o, const cengine::Move& m)
+	std::ostream& operator<<(std::ostream& o, const Move& m)
 	{
 		o << m.from << m.too;
 

@@ -21,7 +21,7 @@ namespace cengine
 
 			~Move() { };
 
-			void print_move() const;
+			std::string as_string() const;
 
 			friend std::ostream& operator<<(std::ostream&, const cengine::Move&);
 	};

@@ -3,7 +3,7 @@
 
 namespace cengine 
 {
-	class Move; // Forward declaration
+	class IoCommand; // Forward declaration
 
 	class IoCommunicator
 	{
@@ -13,9 +13,9 @@ namespace cengine
 
 			~IoCommunicator() { };
 
-			Move read_move();
+			IoCommand read_command();
 
-			void send_move(const Move&) const;
+			void send_command(const IoCommand&) const;
 
 		private: // Functions
 

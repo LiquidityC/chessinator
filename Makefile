@@ -16,7 +16,9 @@ SHELL		= /bin/sh
 CTAGS		= ctags
 
 LIBS 				= 
-COMMON_SOURCEFILES	= chess.cpp iocommunicator.cpp move.cpp
+COMMON_SOURCEFILES	= chess.cpp iocommunicator.cpp move.cpp iocommand.cpp \
+					  commandhandler.cpp
+
 DEPS				= 
 EXECUTABLE 			= chess
 PROG_SOURCEFILES	= $(COMMON_SOURCEFILES)
