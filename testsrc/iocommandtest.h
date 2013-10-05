@@ -1,17 +1,17 @@
 #ifndef _IO_COMMAND_TEST_H
 #define _IO_COMMAND_TEST_H
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/TestFixture.h>
+#include "genericfixture.h"
 
 namespace cengine {
 	class IoCommand;
 }
 
-class IoCommandTest : public CppUnit::TestFixture
+class IoCommandTest : public GenericFixture
 {
 
 	public:
+
 		CPPUNIT_TEST_SUITE( IoCommandTest );
 		CPPUNIT_TEST( test_move );
 		CPPUNIT_TEST_SUITE_END();

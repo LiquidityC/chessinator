@@ -5,19 +5,23 @@
 #include "iocommunicator.h"
 #include "iocommand.h"
 #include "commandhandler.h"
+#include "player.h"
 
 namespace cengine {
 
 	int Chess::run()
 	{
-		bool running = true;
-
 		IoCommunicator io;
 		CommandHandler handler;
+		Player player1, player2;
 
-		while (running) {
+		while (true) {
 			IoCommand c = io.read_command();
 			IoCommand response;
+
+			if (c.as_string() == "quit") {
+				break;
+			}
 
 			if (c.is_move()) {
 				// Perform the move
