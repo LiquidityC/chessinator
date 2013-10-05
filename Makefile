@@ -16,27 +16,23 @@ SHELL		= /bin/sh
 CTAGS		= ctags
 
 LIBS 				= 
-COMMON_SOURCEFILES	= chess.cpp iocommunicator.cpp move.cpp iocommand.cpp \
-					  commandhandler.cpp
 
+OBJDIR				= obj
 DEPS				= 
 EXECUTABLE 			= chess
-PROG_SOURCEFILES	= $(COMMON_SOURCEFILES)
-PROG_SOURCES 		= $(addprefix src/, $(PROG_SOURCEFILES))
-PROG_OBJECTS 		= $(PROG_SOURCES:.cpp=.o)
+PROG_SOURCES 		= $(wildcard src/*.cpp)
+PROG_OBJECTS 		= $(addprefix $(OBJDIR)/,$(notdir $(PROG_SOURCES:.cpp=.o)))
 
-TEST				= testtanks
-TEST_SOURCEFILES	= $(COMMON_SOURCEFILES) 
-TEST_SOURCEFILES	+= 
-TEST_SOURCES 		= $(addprefix src/, $(TEST_SOURCEFILES))
-TEST_OBJECTS		= $(TEST_SOURCES:.cpp=.o)
+TEST				= test
+TEST_SOURCES 		= $(wildcard testsrc/*.cpp)
+TEST_OBJECTS 		= $(addprefix $(OBJDIR)/,$(notdir $(TEST_SOURCES:.cpp=.o)))
 
 default: all
 
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(PROG_OBJECTS) $(DEPS)
-	$(LD) $(LDFLAGS) $(LIBS) -o $@ $(PROG_OBJECTS)
+	$(LD) $(LDFLAGS) $(LIBS) -o $@ $^
 
 check: $(TEST)
 	./$(TEST)
@@ -44,8 +40,13 @@ check: $(TEST)
 $(TEST): $(TEST_OBJECTS) $(DEPS)
 	$(LD) $(LDFLAGS) -lcppunit $(LIBS) -o $@ $(TEST_OBJECTS)
 
-.cpp.o:
-	$(CC) $(INCLUDE) $(CFLAGS) $< -o $@
+$(OBJDIR)/%.o: src/%.cpp
+	$(CC) $(INCLUDE) $(CFLAGS) -c -o $@ $<
+
+$(PROG_OBJECTS): $(OBJDIR)
+
+$(OBJDIR):
+	mkdir $(OBJDIR)
 
 clean:
 	$(RM) -f $(EXECUTABLE) $(TEST) $(PROG_OBJECTS) $(TEST_OBJECTS)

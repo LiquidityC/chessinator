@@ -1,4 +1,4 @@
 io.log
-*.o
+obj
 chess
 xboard.debug
