@@ -4,7 +4,8 @@ else
 CC			= g++
 endif
 
-CFLAGS		= -c -g -pedantic -Wall -Wpointer-arith -Wcast-qual
+CFLAGS		= -c -g -pedantic -Wall -Wpointer-arith -Wcast-qual \
+			  -std=c++11
 LD			= g++
 LDFLAGS 	= 
 AR			= ar
