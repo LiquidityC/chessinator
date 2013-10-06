@@ -11,7 +11,7 @@ namespace cengine
 {
 	bool IoCommand::is_move()
 	{
-		if (command.size() > 5) {
+		if (command.size() > 5 || command.size() < 4) {
 			return false;
 		}
 
@@ -19,11 +19,11 @@ namespace cengine
 		char c;
 		while (i < 4) {
 			c = command[i++];
-			if ( c < 'a' && c > 'h') {
+			if ( c < 'a' || c > 'h') {
 				return false;
 			}
 			c = command[i++];
-			if ( c < '1' && c > '8') {
+			if ( c < '1' || c > '8') {
 				return false;
 			}
 		}
@@ -35,12 +35,18 @@ namespace cengine
 	{
 		assert (is_move()); // Sanity check
 
-		std::string pos1, pos2;
+		std::string coord1, coord2;
 
-		pos1 = command[0] + command[1];
-		pos2 = command[2] + command[3];
+		std::stringstream ss;
+		ss << command[0] << command[1];
+		coord1 = ss.str();
+		ss.str("");
 
-		return Move(pos1, pos2);
+		ss << command[2] << command[3];
+		coord2 = ss.str();
+		ss.flush();
+
+		return Move(coord1, coord2);
 	}
 
 	std::string IoCommand::as_string() const
