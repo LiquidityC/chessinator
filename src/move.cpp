@@ -40,7 +40,7 @@ namespace cengine
 		x = (x_char - ('a' - '1')) - '0';
 		y = y_char - '0';
 
-		return static_cast<int64_t>(1)<<(8*(y-1) + x);
+		return static_cast<int64_t>(1)<<( (8*(y-1) + x)-1 );
 	}
 
 	int64_t Move::get_from_bit() const

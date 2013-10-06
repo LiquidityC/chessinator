@@ -11,11 +11,15 @@ namespace cengine
 
 	class BoardUtil
 	{
+		private:
+
+			static int64_t& get_target_for_move(int64_t&, Board&);
+
 		public:
 
-			Board create_board();
+			static Board create_board();
 
-			void perform_move(Move&, Board&);
+			static void perform_move(Move&, Board&);
 
 	};
 }

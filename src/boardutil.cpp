@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <cassert>
 
 #include "boardutil.h"
 #include "move.h"
@@ -38,6 +39,48 @@ namespace cengine
 
 	void BoardUtil::perform_move(Move& m, Board& b)
 	{
+		int64_t from, to;
 
+		from = m.get_from_bit();
+		to = m.get_to_bit();
+
+		int64_t& mover = get_target_for_move(from, b);
+
+		assert ( &mover != &from );
+		assert ( (mover & from) != 0 );
+
+		mover = mover ^ from;
+		mover = mover | to;
+	}
+
+	int64_t& BoardUtil::get_target_for_move(int64_t& move, Board& b)
+	{
+		if ((move & b.white_pawns) != 0) {
+			return b.white_pawns;
+		} else if ((move & b.white_rooks) != 0) {
+			return b.white_rooks;
+		} else if ((move & b.white_knights) != 0) {
+			return b.white_knights;
+		} else if ((move & b.white_bishops) != 0) {
+			return b.white_bishops;
+		} else if ((move & b.white_king) != 0) {
+			return b.white_king;
+		} else if ((move & b.white_queen) != 0) {
+			return b.white_queen;
+		} else if ((move & b.black_pawns) != 0) {
+			return b.black_pawns;
+		} else if ((move & b.black_rooks) != 0) {
+			return b.black_rooks;
+		} else if ((move & b.black_knights) != 0) {
+			return b.black_knights;
+		} else if ((move & b.black_bishops) != 0) {
+			return b.black_bishops;
+		} else if ((move & b.black_king) != 0) {
+			return b.black_king;
+		} else if ((move & b.black_queen) != 0) {
+			return b.black_queen;
+		}
+
+		return move;
 	}
 }

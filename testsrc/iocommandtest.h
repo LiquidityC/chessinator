@@ -3,10 +3,6 @@
 
 #include "genericfixture.h"
 
-namespace cengine {
-	class IoCommand;
-}
-
 class IoCommandTest : public GenericFixture
 {
 
