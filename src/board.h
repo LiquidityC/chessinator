@@ -18,12 +18,14 @@ namespace cengine
 		BLACK_BISHOPS,
 		BLACK_QUEEN,
 		BLACK_KING,
-		UNIT_TYPE_COUNT
+		ALL_WHITE_PIECES,
+		ALL_BLACK_PIECES,
+		PIECES_SIZE
 	};
 
 	// 64 bits cover the amount of squares on the board
 	typedef struct {
-		int64_t units[UNIT_TYPE_COUNT];
+		int64_t pieces[PIECES_SIZE];
 		bool white_castling_available, black_castling_available;
 	} Board;
 }

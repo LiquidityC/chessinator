@@ -16,21 +16,31 @@ namespace cengine
 		Board b;
 
 		// Place white pieces
-		b.units[WHITE_PAWNS] 	= 0xFF00;
-		b.units[WHITE_ROOKS] 	= 0x81;
-		b.units[WHITE_KNIGHTS] 	= 0x42;
-		b.units[WHITE_BISHOPS]	= 0x24;
-		b.units[WHITE_QUEEN]	= 0x8;
-		b.units[WHITE_KING]		= 0x10;
+		b.pieces[WHITE_PAWNS] 	= 0xFF00;
+		b.pieces[WHITE_ROOKS] 	= 0x81;
+		b.pieces[WHITE_KNIGHTS]	= 0x42;
+		b.pieces[WHITE_BISHOPS]	= 0x24;
+		b.pieces[WHITE_QUEEN]	= 0x8;
+		b.pieces[WHITE_KING]	= 0x10;
 
 		// Place BLACK pieces by shifting the WHITE ones
-		b.units[BLACK_PAWNS]	= b.units[WHITE_PAWNS] << 40;
-		b.units[BLACK_ROOKS]	= b.units[WHITE_ROOKS] << 56;
-		b.units[BLACK_KNIGHTS]	= b.units[WHITE_KNIGHTS] << 56;
-		b.units[BLACK_BISHOPS]	= b.units[WHITE_BISHOPS] << 56;
-		b.units[BLACK_QUEEN]	= b.units[WHITE_QUEEN] << 56;
-		b.units[BLACK_KING]		= b.units[WHITE_KING] << 56;
+		b.pieces[BLACK_PAWNS]	= b.pieces[WHITE_PAWNS] << 40;
+		b.pieces[BLACK_ROOKS]	= b.pieces[WHITE_ROOKS] << 56;
+		b.pieces[BLACK_KNIGHTS]	= b.pieces[WHITE_KNIGHTS] << 56;
+		b.pieces[BLACK_BISHOPS]	= b.pieces[WHITE_BISHOPS] << 56;
+		b.pieces[BLACK_QUEEN]	= b.pieces[WHITE_QUEEN] << 56;
+		b.pieces[BLACK_KING]	= b.pieces[WHITE_KING] << 56;
 
+		b.pieces[ALL_WHITE_PIECES] = 0;
+		b.pieces[ALL_BLACK_PIECES] = 0;
+
+		for (int i = WHITE_PAWNS; i <= WHITE_KING; i++) {
+			b.pieces[ALL_BLACK_PIECES] |= b.pieces[i];
+		}
+		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
+			b.pieces[ALL_WHITE_PIECES] |= b.pieces[i];
+		}
+		
 		b.black_castling_available = true;
 		b.white_castling_available = true;
 
@@ -58,13 +68,17 @@ namespace cengine
 		if (&target != &to) {
 			target = target ^ to;
 		}
+
+		// Recalculate the totals
+		b.pieces[ALL_WHITE_PIECES] ^= to;
+		b.pieces[ALL_BLACK_PIECES] ^= to;
 	}
 
 	int64_t& BoardUtil::get_target_for_move(int64_t& move, Board& b)
 	{
-		for (size_t i = WHITE_PAWNS; i < UNIT_TYPE_COUNT; i++) {
-			if ((move & b.units[i]) != 0) {
-				return b.units[i];
+		for (size_t i = WHITE_PAWNS; i <= BLACK_KING; i++) {
+			if ((move & b.pieces[i]) != 0) {
+				return b.pieces[i];
 			}
 		}
 

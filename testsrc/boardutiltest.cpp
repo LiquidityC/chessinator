@@ -11,12 +11,12 @@ void BoardUtilTest::test_move()
 
 	Board b = BoardUtil::create_board();
 
-	CPPUNIT_ASSERT ( b.units[WHITE_KNIGHTS] == 0x42 );
+	CPPUNIT_ASSERT ( b.pieces[WHITE_KNIGHTS] == 0x42 );
 
-	Move m("b1", "c3"); // Queen pawn to steps
+	Move m("b1", "c3"); // Knight moves out right
 	BoardUtil::perform_move(m, b);
 
-	CPPUNIT_ASSERT ( b.units[WHITE_KNIGHTS] == static_cast<int64_t>(0x40040) );
+	CPPUNIT_ASSERT ( b.pieces[WHITE_KNIGHTS] == static_cast<int64_t>(0x40040) );
 }
 
 void BoardUtilTest::test_take()
@@ -25,11 +25,27 @@ void BoardUtilTest::test_take()
 
 	Board b = BoardUtil::create_board();
 
-	CPPUNIT_ASSERT (b.units[WHITE_QUEEN] == 0x8);
+	CPPUNIT_ASSERT (b.pieces[WHITE_QUEEN] == 0x8);
 
-	Move m("d1", "d2"); // Queen pawn to steps
+	Move m("d1", "d2"); // White queen takes white pawn
 	BoardUtil::perform_move(m, b);
 
-	CPPUNIT_ASSERT (b.units[WHITE_QUEEN] == 0x800);
-	CPPUNIT_ASSERT (b.units[WHITE_PAWNS] == 0xF700);
+	CPPUNIT_ASSERT (b.pieces[WHITE_QUEEN] == 0x800);
+	CPPUNIT_ASSERT (b.pieces[WHITE_PAWNS] == 0xF700);
+}
+
+void BoardUtilTest::test_totals()
+{
+	using namespace cengine;
+
+	Board b = BoardUtil::create_board();
+
+	CPPUNIT_ASSERT ( b.pieces[ALL_WHITE_PIECES] = 0xFFFF );
+	CPPUNIT_ASSERT ( b.pieces[ALL_BLACK_PIECES] = static_cast<int64_t>(0xFFFF)<<32 );
+
+	Move m("d1", "d2"); // White queen takes white pawn
+	BoardUtil::perform_move(m, b);
+
+	CPPUNIT_ASSERT ( b.pieces[ALL_WHITE_PIECES] = 0xFFF7 );
+	CPPUNIT_ASSERT ( b.pieces[ALL_BLACK_PIECES] = static_cast<int64_t>(0xFFFF)<<32 );
 }
