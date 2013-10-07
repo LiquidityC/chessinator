@@ -9,11 +9,13 @@ class BoardUtilTest : public GenericFixture
 
 		CPPUNIT_TEST_SUITE( BoardUtilTest );
 		CPPUNIT_TEST( test_move );
+		CPPUNIT_TEST( test_take );
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 
 		void test_move();
+		void test_take();
 };
 
 #endif

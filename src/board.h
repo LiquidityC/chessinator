@@ -5,15 +5,26 @@
 
 namespace cengine
 {
+	enum Units {
+		WHITE_PAWNS,
+		WHITE_ROOKS,
+		WHITE_KNIGHTS,
+		WHITE_BISHOPS,
+		WHITE_QUEEN,
+		WHITE_KING,
+		BLACK_PAWNS,
+		BLACK_ROOKS,
+		BLACK_KNIGHTS,
+		BLACK_BISHOPS,
+		BLACK_QUEEN,
+		BLACK_KING,
+		UNIT_TYPE_COUNT
+	};
+
 	// 64 bits cover the amount of squares on the board
 	typedef struct {
-			int64_t black_pawns, white_pawns;
-			int64_t black_rooks, white_rooks;
-			int64_t black_bishops, white_bishops;
-			int64_t black_knights, white_knights;
-			int64_t black_queen, white_queen;
-			int64_t black_king, white_king;
-			bool white_castling_available, black_castling_available;
+		int64_t units[UNIT_TYPE_COUNT];
+		bool white_castling_available, black_castling_available;
 	} Board;
 }
 
