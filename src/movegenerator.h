@@ -44,7 +44,7 @@ namespace cengine
 			void calculate_moves_for(const Board&);
 
 			iterator begin() { return iterator(possible_moves.begin()); }
-			iterator end() { return iterator(possible_moves.begin()); }
+			iterator end() { return iterator(possible_moves.end()); }
 
 			const_iterator begin() const 
 			{

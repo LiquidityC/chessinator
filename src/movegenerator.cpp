@@ -1,4 +1,5 @@
 #include "movegenerator.h"
+#include <cstdio>
 
 #define WHITE_SQUARES 0xAA55AA55AA55AA55
 #define BLACK_SQUARES 0x55AA55AA55AA55AA
@@ -24,7 +25,6 @@ namespace cengine
 
 	void MoveGenerator::calculate_pawn_moves_for(const Board& b)
 	{
-		// XXX: Totally untested, just some ideas.
 		uint64_t pawns = b.pieces[WHITE_PAWNS];
 
 		while(pawns != 0)
@@ -42,19 +42,19 @@ namespace cengine
 			bool firstPosition = (pawn & 0xFF00) != 0;
 			uint64_t allPieces = b.pieces[ALL_WHITE_PIECES] | b.pieces[ALL_BLACK_PIECES];
 
-			bool oneStepFree = ((pawn >> 8) & allPieces) == 0;
+			bool oneStepFree = ((pawn << 8) & allPieces) == 0;
 
 			// One step forward
 			if(oneStepFree)
 			{
-				destination = pawn >> 8;
+				destination = pawn << 8;
 				addMove(b, pawn, destination, WHITE_PAWNS);
 			}
 
 			// Two step forward
 			if(oneStepFree && firstPosition)
 			{
-				destination = pawn >> 16;
+				destination = pawn << 16;
 				bool twoStepFree = (destination & allPieces) == 0;
 				if(twoStepFree)
 				{
@@ -195,6 +195,14 @@ namespace cengine
 			newBoard.pieces[i] = newBoard.pieces[i] & ~to;
 		}
 		newBoard.pieces[unit] |= to;
+		if(unit <= WHITE_KING)
+		{
+			newBoard.pieces[ALL_WHITE_PIECES] |= to;
+		}
+		else
+		{
+			newBoard.pieces[ALL_BLACK_PIECES] |= to;
+		}
 
 		possible_moves.push_back(newBoard);
 	}

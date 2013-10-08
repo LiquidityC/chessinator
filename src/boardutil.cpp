@@ -35,10 +35,10 @@ namespace cengine
 		b.pieces[ALL_BLACK_PIECES] = 0;
 
 		for (int i = WHITE_PAWNS; i <= WHITE_KING; i++) {
-			b.pieces[ALL_BLACK_PIECES] |= b.pieces[i];
+			b.pieces[ALL_WHITE_PIECES] |= b.pieces[i];
 		}
 		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
-			b.pieces[ALL_WHITE_PIECES] |= b.pieces[i];
+			b.pieces[ALL_BLACK_PIECES] |= b.pieces[i];
 		}
 		
 		b.black_castling_available = true;
