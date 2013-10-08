@@ -13,7 +13,7 @@ void MoveTest::test_coordinates()
 
 void MoveTest::test_coordinate_conversion()
 {
-	int64_t bit = 1;
+	uint64_t bit = 1;
 
 	cengine::Move m1("e3", "e4");
 

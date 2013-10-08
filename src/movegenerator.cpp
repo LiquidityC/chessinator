@@ -70,26 +70,27 @@ namespace cengine
 
 	void MoveGenerator::calculate_rook_moves_for(const Board& b)
 	{
-		// Stub
+		// TODO: Implement me
+		// Shifts: 6, 10, 15, 17
 	}
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
-		// Stub
+		// TODO: Implement me
 	}
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
 	{
-		// Stub
+		// TODO: Implement me
 	}
 
 	void MoveGenerator::calculate_queen_moves_for(const Board& b)
 	{
-		// Stub
+		// TODO: Implement me
 	}
 
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
-		// Stub
+		// TODO: Implement me
 	}
 }
