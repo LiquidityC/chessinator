@@ -3,3 +3,4 @@ obj
 chess
 test
 xboard.debug
+*.swp

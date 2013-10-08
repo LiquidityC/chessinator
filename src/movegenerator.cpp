@@ -4,6 +4,8 @@ namespace cengine
 {
 	void MoveGenerator::calculate_moves_for(const Board& b)
 	{
+		possible_moves.clear();
+
 		// Fill the local vector
 		calculate_pawn_moves_for(b);
 		calculate_rook_moves_for(b);
