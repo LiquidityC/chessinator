@@ -30,7 +30,7 @@ namespace cengine
 		to_bit = get_bit_for_coordinate(to);
 	}
 
-	int64_t Move::get_bit_for_coordinate(const std::string& coordinate) const
+	uint64_t Move::get_bit_for_coordinate(const std::string& coordinate) const
 	{
 		unsigned int x, y;
 	
@@ -40,15 +40,15 @@ namespace cengine
 		x = (x_char - ('a' - '1')) - '0';
 		y = y_char - '0';
 
-		return static_cast<int64_t>(1)<<( (8*(y-1) + x)-1 );
+		return static_cast<uint64_t>(1)<<( (8*(y-1) + x)-1 );
 	}
 
-	int64_t Move::get_from_bit() const
+	uint64_t Move::get_from_bit() const
 	{
 		return from_bit;
 	}
 
-	int64_t Move::get_to_bit() const
+	uint64_t Move::get_to_bit() const
 	{
 		return to_bit;
 	}

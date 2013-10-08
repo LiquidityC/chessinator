@@ -50,13 +50,13 @@ namespace cengine
 
 	void BoardUtil::perform_move(Move& m, Board& b)
 	{
-		int64_t from, to;
+		uint64_t from, to;
 
 		from = m.get_from_bit();
 		to = m.get_to_bit();
 
-		int64_t& mover = get_target_for_move(from, b);
-		int64_t& target = get_target_for_move(to, b);
+		uint64_t& mover = get_target_for_move(from, b);
+		uint64_t& target = get_target_for_move(to, b);
 
 		assert ( &mover != &from );
 		assert ( (mover & from) != 0 );
@@ -78,7 +78,7 @@ namespace cengine
 		b.pieces[ALL_BLACK_PIECES] ^= to;
 	}
 
-	int64_t& BoardUtil::get_target_for_move(int64_t& move, Board& b)
+	uint64_t& BoardUtil::get_target_for_move(uint64_t& move, Board& b)
 	{
 		for (size_t i = WHITE_PAWNS; i <= BLACK_KING; i++) {
 			if ((move & b.pieces[i]) != 0) {

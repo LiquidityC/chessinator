@@ -8,14 +8,14 @@ namespace cengine
 	class Move
 	{
 		private: // Variables
-			int64_t from_bit, to_bit;
+			uint64_t from_bit, to_bit;
 			std::string from, to;
 
 		private: // Functions
 
 			void calculate_coordinates();
 
-			int64_t get_bit_for_coordinate(const std::string& coordinate) const;
+			uint64_t get_bit_for_coordinate(const std::string& coordinate) const;
 
 		public: // Functions
 
@@ -29,9 +29,9 @@ namespace cengine
 
 			const std::string& get_to_coord() const;
 
-			int64_t get_from_bit() const;
+			uint64_t get_from_bit() const;
 
-			int64_t get_to_bit() const;
+			uint64_t get_to_bit() const;
 
 			friend std::ostream& operator<<(std::ostream&, const cengine::Move&);
 	};

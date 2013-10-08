@@ -13,7 +13,7 @@ namespace cengine
 	{
 		private:
 
-			static int64_t& get_target_for_move(int64_t&, Board&);
+			static uint64_t& get_target_for_move(uint64_t&, Board&);
 
 		public:
 
