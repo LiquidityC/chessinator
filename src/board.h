@@ -27,6 +27,7 @@ namespace cengine
 	typedef struct {
 		int64_t pieces[PIECES_SIZE];
 		bool white_castling_available, black_castling_available;
+		bool piece_taken;
 	} Board;
 }
 

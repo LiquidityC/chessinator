@@ -43,6 +43,7 @@ namespace cengine
 		
 		b.black_castling_available = true;
 		b.white_castling_available = true;
+		b.piece_taken = false;
 
 		return b;
 	}
@@ -67,6 +68,9 @@ namespace cengine
 		// Check if we 'take' a piece
 		if (&target != &to) {
 			target = target ^ to;
+			b.piece_taken = true;
+		} else {
+			b.piece_taken = false;
 		}
 
 		// Recalculate the totals
