@@ -64,6 +64,8 @@ namespace cengine
 			void calculate_bishop_moves_for(const Board&);
 			void calculate_queen_moves_for(const Board&);
 			void calculate_king_moves_for(const Board&);
+
+			void addMove(const Board&, uint64_t, uint64_t, Units);
 	};
 }
 
