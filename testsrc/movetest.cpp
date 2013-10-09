@@ -34,4 +34,12 @@ void MoveTest::test_coordinate_conversion()
 
 	CPPUNIT_ASSERT ( m4.get_from_bit() == bit<<1 );
 	CPPUNIT_ASSERT ( m4.get_to_bit() == bit<<18 );
+
+	cengine::Move m5(0x8, 0x800);
+	CPPUNIT_ASSERT ( m5.get_from_coord() == "d1" );
+	CPPUNIT_ASSERT ( m5.get_to_coord() == "d2" );
+
+	cengine::Move m6(0x1, 0x100);
+	CPPUNIT_ASSERT ( m6.get_from_coord() == "a1" );
+	CPPUNIT_ASSERT ( m6.get_to_coord() == "a2" );
 }

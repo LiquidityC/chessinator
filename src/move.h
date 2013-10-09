@@ -13,13 +13,19 @@ namespace cengine
 
 		private: // Functions
 
-			void calculate_coordinates();
+			void bits_to_coordinates();
+
+			std::string get_coordinate_for_bit(const uint64_t& bit) const;
+
+			void coordinates_to_bits();
 
 			uint64_t get_bit_for_coordinate(const std::string& coordinate) const;
 
 		public: // Functions
 
 			Move(std::string f, std::string t);
+
+			Move(uint64_t, uint64_t);
 
 			~Move() { };
 

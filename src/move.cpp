@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <cstdio>
 
 #include "move.h"
 
@@ -7,7 +8,12 @@ namespace cengine
 {
 	Move::Move(std::string f, std::string t) : from(f), to(t)
 	{
-		calculate_coordinates();
+		coordinates_to_bits();
+	}
+
+	Move::Move(uint64_t f, uint64_t t) : from_bit(f), to_bit(t)
+	{
+		bits_to_coordinates();
 	}
 
 	std::string Move::as_string() const
@@ -24,7 +30,33 @@ namespace cengine
 		return o;
 	}
 
-	void Move::calculate_coordinates()
+	void Move::bits_to_coordinates()
+	{
+		from = get_coordinate_for_bit(from_bit);
+		to = get_coordinate_for_bit(to_bit);
+	}
+
+	std::string Move::get_coordinate_for_bit(const uint64_t& bit) const
+	{
+		int position = 1;
+		while (bit>>position != 0) {
+			position++;
+		}
+
+		unsigned int x_coord = position % 8;
+		unsigned int y_coord = (position - x_coord) / 8;
+
+		x_coord--;
+		y_coord++;
+
+		std::stringstream ss;
+		ss << static_cast<char>('a' + x_coord);
+		ss << y_coord;
+
+		return ss.str();
+	}
+
+	void Move::coordinates_to_bits()
 	{
 		from_bit = get_bit_for_coordinate(from);
 		to_bit = get_bit_for_coordinate(to);
