@@ -18,6 +18,7 @@ void MoveGeneratorTest::test_pawn()
 	for(auto it = generator.begin(); it != generator.end(); ++it) {
 		i++;
 	}
+
 	// First move should have 20 outcomes.
 	CPPUNIT_ASSERT( i == 20 );
 }

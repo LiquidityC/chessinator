@@ -1,12 +1,21 @@
-#include "movegenerator.h"
 #include <cstdio>
 
-#define WHITE_SQUARES 0xAA55AA55AA55AA55
-#define BLACK_SQUARES 0x55AA55AA55AA55AA
-#define LEFT_ROW      0x8080808080808080
-#define RIGHT_ROW     0x0101010101010101
-#define TOP_ROW       0xFF00000000000000
-#define BOTTOM_ROW    0x00000000000000FF
+#include "movegenerator.h"
+#include "move.h"
+#include "boardutil.h"
+
+#define WHITE_SQUARES 	0xAA55AA55AA55AA55
+#define BLACK_SQUARES 	0x55AA55AA55AA55AA
+
+#define LEFT_COL      	0x8080808080808080
+#define COL_B			0x0202020202020202
+#define COL_G			0x4040404040404040
+#define RIGHT_COL     	0x0101010101010101
+
+#define TOP_ROW       	0xFF00000000000000
+#define ROW_7       	0x00FF000000000000
+#define ROW_2       	0x000000000000FF00
+#define BOTTOM_ROW    	0x00000000000000FF
 
 namespace cengine
 {
@@ -48,7 +57,7 @@ namespace cengine
 			if(oneStepFree)
 			{
 				destination = pawn << 8;
-				addMove(b, pawn, destination, WHITE_PAWNS);
+				add_move(b, pawn, destination);
 			}
 
 			// Two step forward
@@ -58,27 +67,27 @@ namespace cengine
 				bool twoStepFree = (destination & allPieces) == 0;
 				if(twoStepFree)
 				{
-					addMove(b, pawn, destination, WHITE_PAWNS);
+					add_move(b, pawn, destination);
 				}
 			}
 
 			// Attack left
-			if((LEFT_ROW & pawn) == 0)
+			if((LEFT_COL & pawn) == 0)
 			{
 				destination = pawn << 9;
 				if((destination & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
-					addMove(b, pawn, destination, WHITE_PAWNS);
+					add_move(b, pawn, destination);
 				}
 			}
 
 			// Attack right
-			if((RIGHT_ROW & pawn) == 0)
+			if((RIGHT_COL & pawn) == 0)
 			{
 				destination = pawn << 7;
 				if((destination & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
-					addMove(b, pawn, destination, WHITE_PAWNS);
+					add_move(b, pawn, destination);
 				}
 			}
 		}
@@ -98,13 +107,13 @@ namespace cengine
 			uint64_t position = rook;
 
 			// Left
-			while((LEFT_ROW & position) == 0)
+			while((LEFT_COL & position) == 0)
 			{
 				position <<= 1;
 				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
 					// Attack
-					addMove(b, rook, position, WHITE_ROOKS);
+					add_move(b, rook, position);
 					break;
 				}
 				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
@@ -112,23 +121,23 @@ namespace cengine
 					// Blocked
 					break;
 				}
-				addMove(b, rook, position, WHITE_ROOKS);
+				add_move(b, rook, position);
 			}
 
 			position = rook;
-			while((RIGHT_ROW & position) == 0)
+			while((RIGHT_COL & position) == 0)
 			{
 				position >>= 1;
 				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
-					addMove(b, rook, position, WHITE_ROOKS);
+					add_move(b, rook, position);
 					break;
 				}
 				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
 				{
 					break;
 				}
-				addMove(b, rook, position, WHITE_ROOKS);
+				add_move(b, rook, position);
 			}
 
 			position = rook;
@@ -137,14 +146,14 @@ namespace cengine
 				position <<= 8;
 				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
-					addMove(b, rook, position, WHITE_ROOKS);
+					add_move(b, rook, position);
 					break;
 				}
 				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
 				{
 					break;
 				}
-				addMove(b, rook, position, WHITE_ROOKS);
+				add_move(b, rook, position);
 			}
 
 			position = rook;
@@ -153,22 +162,62 @@ namespace cengine
 				position >>= 8;
 				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
 				{
-					addMove(b, rook, position, WHITE_ROOKS);
+					add_move(b, rook, position);
 					break;
 				}
 				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
 				{
 					break;
 				}
-				addMove(b, rook, position, WHITE_ROOKS);
+				add_move(b, rook, position);
 			}
 		}
 	}
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
-		// TODO: Implement me
 		// Shifts: 6, 10, 15, 17
+		uint64_t knights = b.pieces[WHITE_ROOKS];
+
+		while(knights != 0)
+		{
+			uint64_t knight = (knights & (knights-1)) ^ knights;
+			knights &= knights-1;
+
+			if ( (knight & LEFT_COL) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<15) == 0 && (knight & TOP_ROW & ROW_7) == 0) {
+					add_move(b, knight, knight<<15);
+				}
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>17) == 0 && (knight & BOTTOM_ROW & ROW_2) == 0) {
+					add_move(b, knight, knight>>17);
+				}
+			}
+			if ( (knight & LEFT_COL & COL_B) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<6) == 0 && (knight & TOP_ROW) == 0) {
+					add_move(b, knight, knight<<6);
+				}
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>10) == 0 && (knight & BOTTOM_ROW) == 0) {
+					add_move(b, knight, knight>>10);
+				}
+			}
+			if ( (knight & RIGHT_COL) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<17) == 0 && (knight & TOP_ROW & ROW_7) == 0) {
+					add_move(b, knight, knight<<17);
+				}
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>15) == 0 && (knight & BOTTOM_ROW & ROW_2) == 0) {
+					add_move(b, knight, knight>>15);
+				}
+			}
+			if ( (knight & RIGHT_COL & COL_G) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<10) == 0 && (knight & TOP_ROW) == 0) {
+					add_move(b, knight, knight<<10);
+				}
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>6) == 0 && (knight & BOTTOM_ROW) == 0) {
+					add_move(b, knight, knight>>6);
+				}
+			}
+		}
+
 	}
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
@@ -186,24 +235,13 @@ namespace cengine
 		// TODO: Implement me
 	}
 
-	void MoveGenerator::addMove(const Board& board, uint64_t from, uint64_t to, Units unit)
+	void MoveGenerator::add_move(const Board& board, uint64_t from, uint64_t to)
 	{
-		Board newBoard = board;
-		newBoard.pieces[unit] = newBoard.pieces[unit] & ~from;
-		for(int i = WHITE_PAWNS; i < PIECES_SIZE; i++)
-		{
-			newBoard.pieces[i] = newBoard.pieces[i] & ~to;
-		}
-		newBoard.pieces[unit] |= to;
-		if(unit <= WHITE_KING)
-		{
-			newBoard.pieces[ALL_WHITE_PIECES] |= to;
-		}
-		else
-		{
-			newBoard.pieces[ALL_BLACK_PIECES] |= to;
-		}
+		Board new_board = board;
+		Move m(from, to);
 
-		possible_moves.push_back(newBoard);
+		BoardUtil::perform_move(m, new_board);
+
+		possible_moves.push_back(new_board);
 	}
 }
