@@ -193,7 +193,40 @@ namespace cengine
 
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
-		// TODO: Implement me
+		uint64_t king = b.pieces[WHITE_KING];
+
+		if ((king & LEFT_COL) == 0) {
+			if ((king>>1 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+				add_move(b, king, king>>1);
+			}
+			if ((king<<7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & TOP_ROW) == 0) {
+				add_move(b, king, king<<7);
+			}
+			if ((king>>9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & BOTTOM_ROW) == 0) {
+				add_move(b, king, king<<9);
+			}
+		}
+		if ((king & RIGHT_COL) == 0) {
+			if ((king<<1 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+				add_move(b, king, king>>1);
+			}
+			if ((king<<9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & TOP_ROW) == 0) {
+				add_move(b, king, king<<9);
+			}
+			if ((king>>7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & BOTTOM_ROW) == 0) {
+				add_move(b, king, king>>7);
+			}
+		}
+		if ((king & TOP_ROW) == 0) {
+			if ((king<<8 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+				add_move(b, king, king<<8);
+			}
+		}
+		if ((king & BOTTOM_ROW) == 0) {
+			if ((king>>8 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+				add_move(b, king, king>>8);
+			}
+		}
 	}
 
 	void MoveGenerator::calculate_direction_moves(const Board& board, const uint64_t piece, const Direction direction)
