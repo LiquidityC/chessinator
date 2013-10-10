@@ -28,9 +28,9 @@ TEST				= test
 TEST_SOURCES 		= $(filter-out src/chess.cpp,$(wildcard src/*.cpp)) $(wildcard testsrc/*.cpp)
 TEST_OBJECTS 		= $(addprefix $(OBJDIR)/,$(notdir $(TEST_SOURCES:.cpp=.o)))
 
-default: all
+default: $(EXECUTABLE)
 
-all: $(EXECUTABLE)
+all: $(EXECUTABLE) $(TEST)
 
 $(EXECUTABLE): $(PROG_OBJECTS) $(DEPS)
 	$(LD) $(LDFLAGS) $(LIBS) -o $@ $^
@@ -42,15 +42,15 @@ $(TEST): $(TEST_OBJECTS) $(DEPS)
 	$(LD) $(LDFLAGS) -lcppunit $(LIBS) -o $@ $(TEST_OBJECTS)
 
 $(OBJDIR)/%.o: src/%.cpp
-	$(CC) $(INCLUDE) $(CFLAGS) -c -o $@ $<
+	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $<
 
 $(OBJDIR)/%.o: testsrc/%.cpp
-	$(CC) $(INCLUDE) $(CFLAGS) -c -o $@ $<
+	$(CC) $(INCLUDE) $(CFLAGS) -o $@ $<
 
-$(PROG_OBJECTS): $(OBJDIR)
-
-$(OBJDIR):
-	mkdir $(OBJDIR)
+#$(PROG_OBJECTS): $(OBJDIR)
+#
+#$(OBJDIR):
+#	mkdir $(OBJDIR)
 
 clean:
 	$(RM) -f $(EXECUTABLE) $(TEST) $(PROG_OBJECTS) $(TEST_OBJECTS)

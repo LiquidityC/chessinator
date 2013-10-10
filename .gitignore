@@ -1,5 +1,5 @@
 io.log
-obj
+obj/*.o
 chess
 test
 xboard.debug
