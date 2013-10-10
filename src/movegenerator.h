@@ -6,6 +6,17 @@
 
 namespace cengine
 {
+	enum Direction {
+		UP,
+		UP_RIGHT,
+		RIGHT,
+		DOWN_RIGHT,
+		DOWN,
+		DOWN_LEFT,
+		LEFT,
+		UP_LEFT
+	};
+
 	class MoveGenerator
 	{
 		public: // Subclasses
@@ -65,6 +76,8 @@ namespace cengine
 			void calculate_queen_moves_for(const Board&);
 			void calculate_king_moves_for(const Board&);
 
+			void calculate_direction_moves(const Board&, const uint64_t, const Direction);
+			void shift_piece(uint64_t&, const Direction);
 			void add_move(const Board&, uint64_t, uint64_t);
 	};
 }

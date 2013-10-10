@@ -95,8 +95,6 @@ namespace cengine
 
 	void MoveGenerator::calculate_rook_moves_for(const Board& b)
 	{
-		// XXX: Totally untested, just some ideas.
-		// Some copied from above, refactor and test soon.
 		uint64_t rooks = b.pieces[WHITE_ROOKS];
 
 		while(rooks != 0)
@@ -104,73 +102,10 @@ namespace cengine
 			uint64_t rook = (rooks & (rooks-1)) ^ rooks;
 			rooks &= rooks-1;
 
-			uint64_t position = rook;
-
-			// Left
-			while((LEFT_COL & position) == 0)
-			{
-				position <<= 1;
-				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
-				{
-					// Attack
-					add_move(b, rook, position);
-					break;
-				}
-				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
-				{
-					// Blocked
-					break;
-				}
-				add_move(b, rook, position);
-			}
-
-			position = rook;
-			while((RIGHT_COL & position) == 0)
-			{
-				position >>= 1;
-				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
-				{
-					add_move(b, rook, position);
-					break;
-				}
-				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
-				{
-					break;
-				}
-				add_move(b, rook, position);
-			}
-
-			position = rook;
-			while((TOP_ROW & position) == 0)
-			{
-				position <<= 8;
-				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
-				{
-					add_move(b, rook, position);
-					break;
-				}
-				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
-				{
-					break;
-				}
-				add_move(b, rook, position);
-			}
-
-			position = rook;
-			while((BOTTOM_ROW & position) == 0)
-			{
-				position >>= 8;
-				if((position & b.pieces[ALL_BLACK_PIECES]) != 0)
-				{
-					add_move(b, rook, position);
-					break;
-				}
-				if((position & b.pieces[ALL_WHITE_PIECES]) != 0)
-				{
-					break;
-				}
-				add_move(b, rook, position);
-			}
+			calculate_direction_moves(b, rook, UP);
+			calculate_direction_moves(b, rook, RIGHT);
+			calculate_direction_moves(b, rook, DOWN);
+			calculate_direction_moves(b, rook, LEFT);
 		}
 	}
 
@@ -222,17 +157,127 @@ namespace cengine
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
 	{
-		// TODO: Implement me
+		uint64_t bishops = b.pieces[WHITE_BISHOPS];
+
+		while(bishops != 0)
+		{
+			uint64_t bishop = (bishops & (bishops-1)) ^ bishops;
+			bishops &= bishops-1;
+
+			calculate_direction_moves(b, bishop, UP_RIGHT);
+			calculate_direction_moves(b, bishop, DOWN_RIGHT);
+			calculate_direction_moves(b, bishop, DOWN_LEFT);
+			calculate_direction_moves(b, bishop, UP_LEFT);
+		}
 	}
 
 	void MoveGenerator::calculate_queen_moves_for(const Board& b)
 	{
-		// TODO: Implement me
+		uint64_t queens = b.pieces[WHITE_QUEEN];
+
+		while(queens != 0)
+		{
+			uint64_t queen = (queens & (queens-1)) ^ queens;
+			queens &= queens-1;
+
+			calculate_direction_moves(b, queen, UP);
+			calculate_direction_moves(b, queen, UP_RIGHT);
+			calculate_direction_moves(b, queen, RIGHT);
+			calculate_direction_moves(b, queen, DOWN_RIGHT);
+			calculate_direction_moves(b, queen, DOWN);
+			calculate_direction_moves(b, queen, DOWN_LEFT);
+			calculate_direction_moves(b, queen, LEFT);
+			calculate_direction_moves(b, queen, UP_LEFT);
+		}
 	}
 
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
 		// TODO: Implement me
+	}
+
+	void MoveGenerator::calculate_direction_moves(const Board& board, const uint64_t piece, const Direction direction)
+	{
+		uint64_t position = piece;
+		Units enemyPieces = ALL_BLACK_PIECES;
+		Units friendPieces = ALL_WHITE_PIECES;
+
+		uint64_t endSquares;
+
+		switch(direction)
+		{
+			case UP:
+				endSquares = TOP_ROW;
+				break;
+			case UP_RIGHT:
+				endSquares = TOP_ROW | RIGHT_COL;
+				break;
+			case RIGHT:
+				endSquares = RIGHT_COL;
+				break;
+			case DOWN_RIGHT:
+				endSquares = RIGHT_COL | BOTTOM_ROW;
+				break;
+			case DOWN:
+				endSquares = BOTTOM_ROW;
+				break;
+			case DOWN_LEFT:
+				endSquares = BOTTOM_ROW | LEFT_COL;
+				break;
+			case LEFT:
+				endSquares = LEFT_COL;
+				break;
+			case UP_LEFT:
+				endSquares = LEFT_COL | TOP_ROW;
+				break;
+		}
+
+		while((endSquares & position) == 0)
+		{
+			shift_piece(position, direction);
+
+			if((position & board.pieces[enemyPieces]) != 0)
+			{
+				add_move(board, piece, position);
+				break;
+			}
+			if((position & board.pieces[friendPieces]) != 0)
+			{
+				break;
+			}
+			add_move(board, piece, position);
+		}
+	}
+
+	void MoveGenerator::shift_piece(uint64_t& piece, const Direction direction)
+	{
+		switch(direction)
+		{
+			case UP:
+				piece <<= 8;
+				break;
+			case UP_RIGHT:
+				piece <<= 7;
+				break;
+			case RIGHT:
+				piece >>= 1;
+				break;
+			case DOWN_RIGHT:
+				piece >>= 9;
+				break;
+			case DOWN:
+				piece >>= 8;
+				break;
+			case DOWN_LEFT:
+				piece >>= 7;
+				break;
+			case LEFT:
+				piece <<= 1;
+				break;
+			case UP_LEFT:
+				piece <<= 9;
+				break;
+		}
 	}
 
 	void MoveGenerator::add_move(const Board& board, uint64_t from, uint64_t to)
