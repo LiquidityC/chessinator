@@ -75,6 +75,7 @@ namespace cengine
 			void calculate_bishop_moves_for(const Board&);
 			void calculate_queen_moves_for(const Board&);
 			void calculate_king_moves_for(const Board&);
+			void calculate_castling_moves(const Board&);
 
 			void calculate_direction_moves(const Board&, const uint64_t, const Direction);
 			void shift_piece(uint64_t&, const Direction);

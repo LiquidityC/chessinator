@@ -9,11 +9,27 @@ namespace cengine
 	Move::Move(std::string f, std::string t) : from(f), to(t)
 	{
 		coordinates_to_bits();
+		check_if_castling();
 	}
 
 	Move::Move(uint64_t f, uint64_t t) : from_bit(f), to_bit(t)
 	{
 		bits_to_coordinates();
+		check_if_castling();
+	}
+
+	void Move::check_if_castling()
+	{
+		castling_move = false;
+		if (from == "e1" && to == "g1") {
+			castling_move = true;
+		} else if (from == "e1" && to == "c1") {
+			castling_move = true;
+		} else if (from == "e8" && to == "g8") {
+			castling_move = true;
+		} else if (from == "e8" && to == "c8") {
+			castling_move = true;
+		}
 	}
 
 	std::string Move::as_string() const
@@ -25,7 +41,7 @@ namespace cengine
 
 	std::ostream& operator<<(std::ostream& o, const Move& m)
 	{
-		o << m.from << m.to;
+		o << m.as_string();
 
 		return o;
 	}
@@ -73,6 +89,11 @@ namespace cengine
 		y = y_char - '0';
 
 		return static_cast<uint64_t>(1)<<( (8*(y-1) + x)-1 );
+	}
+
+	bool Move::is_castling_move() const
+	{
+		return castling_move;
 	}
 
 	uint64_t Move::get_from_bit() const

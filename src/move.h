@@ -10,6 +10,7 @@ namespace cengine
 		private: // Variables
 			uint64_t from_bit, to_bit;
 			std::string from, to;
+			bool castling_move;
 
 		private: // Functions
 
@@ -20,6 +21,8 @@ namespace cengine
 			void coordinates_to_bits();
 
 			uint64_t get_bit_for_coordinate(const std::string& coordinate) const;
+
+			void check_if_castling();
 
 		public: // Functions
 
@@ -38,6 +41,8 @@ namespace cengine
 			uint64_t get_from_bit() const;
 
 			uint64_t get_to_bit() const;
+
+			bool is_castling_move() const;
 
 			friend std::ostream& operator<<(std::ostream&, const cengine::Move&);
 	};

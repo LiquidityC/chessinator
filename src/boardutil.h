@@ -13,13 +13,19 @@ namespace cengine
 	{
 		private:
 
-			static uint64_t& get_target_for_move(uint64_t&, Board&);
+			static Units get_target_for_move(uint64_t&, Board&);
+
+			static void perform_regular_move(const Move&, Board&);
+
+			static void perform_castling_move(const Move&, Board&);
+
+			static void check_castling_impact(const Move&, Board&);
 
 		public:
 
 			static Board create_board();
 
-			static void perform_move(Move&, Board&);
+			static void perform_move(const Move&, Board&);
 
 	};
 }

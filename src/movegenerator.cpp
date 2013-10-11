@@ -111,7 +111,6 @@ namespace cengine
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
-		// Shifts: 6, 10, 15, 17
 		uint64_t knights = b.pieces[WHITE_ROOKS];
 
 		while(knights != 0)
@@ -226,6 +225,16 @@ namespace cengine
 			if ((king>>8 & b.pieces[ALL_WHITE_PIECES]) == 0) {
 				add_move(b, king, king>>8);
 			}
+		}
+	}
+	
+	void MoveGenerator::calculate_castling_moves(const Board& b)
+	{
+		if ( (b.pieces[ALL_WHITE_PIECES] & static_cast<uint64_t>(0x60)) == 0 && b.white_long_castling_available) {
+			add_move(b, 0x10, 0x80);
+		}
+		if ( (b.pieces[ALL_WHITE_PIECES] & static_cast<uint64_t>(0xE)) == 0 && b.white_short_castling_available) {
+			add_move(b, 0x10, 0x80);
 		}
 	}
 

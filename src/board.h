@@ -26,7 +26,8 @@ namespace cengine
 	// 64 bits cover the amount of squares on the board
 	typedef struct {
 		uint64_t pieces[PIECES_SIZE];
-		bool white_castling_available, black_castling_available;
+		bool white_long_castling_available, black_long_castling_available;
+		bool white_short_castling_available, black_short_castling_available;
 		bool piece_taken;
 	} Board;
 }
