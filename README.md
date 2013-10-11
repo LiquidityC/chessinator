@@ -14,7 +14,6 @@ Make sure you have xboard installed and then run **xboard -debug -fd . -fcp './c
 
 Development
 -----------
-Not much is done yet so get cracking.
 Logs are written from both xboard and this program if you run it with the command above, filenames are **io.log** and **xboard.debug**.
 
 ### Structure and execution
@@ -37,14 +36,11 @@ When in doubt fall back to this: [google style recomendations](http://google-sty
 it seems pretty decent and clean. That's what I do.
 
 ### Testing
-The plan is to use cpp unit. I've used it before and it's pretty straight forward. 
-It's available for most linux dists, the Makefile is prepared for it so it's fine 
-to just go ahead and develop in a testdriven way.
+We are using cppunit. If you provide code write test for it. Try to make as much code as possible testable
+since minor bugs can be devastating in this kind of project/löogic.
 
 ### TODO:
-- Board structure (data container)
-- AIEngine (alfabeta)
+- Enabled generating moves for both colors
 - Board evaluation
 - Transposition table?
 - Better name for program?
-- Stuff?
