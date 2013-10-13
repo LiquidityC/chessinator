@@ -54,6 +54,8 @@ namespace cengine
 
 			void calculate_moves_for(const Board&);
 
+			size_t move_count();
+
 			iterator begin() { return iterator(possible_moves.begin()); }
 			iterator end() { return iterator(possible_moves.end()); }
 

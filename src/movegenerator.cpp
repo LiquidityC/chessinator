@@ -322,6 +322,11 @@ namespace cengine
 		}
 	}
 
+	size_t MoveGenerator::move_count()
+	{
+		return possible_moves.size();
+	}
+
 	void MoveGenerator::add_move(const Board& board, uint64_t from, uint64_t to)
 	{
 		Board new_board = board;

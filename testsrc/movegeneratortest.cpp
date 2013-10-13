@@ -1,4 +1,6 @@
 #include <unistd.h>
+#include <fstream>
+#include <iostream>
 
 #include "movegeneratortest.h"
 #include "../src/movegenerator.h"
@@ -7,18 +9,23 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION( MoveGeneratorTest );
 
-void MoveGeneratorTest::test_pawn()
+void MoveGeneratorTest::test_move()
 {
+	CPPUNIT_ASSERT(test_board("res/startboard.txt") == 20);
+	CPPUNIT_ASSERT(test_board("res/testking.txt") == 8);
+	CPPUNIT_ASSERT(test_board("res/testcastling.txt") == 24);
+	CPPUNIT_ASSERT(test_board("res/testqueen.txt") == 30);
+}
+
+int MoveGeneratorTest::test_board(std::string filename)
+{
+	std::ifstream file;
+	file.open(filename);
 
 	cengine::MoveGenerator generator;
-	cengine::Board board = cengine::BoardUtil::create_board();
+	cengine::Board board = cengine::BoardUtil::create_board(file);
+	file.close();
 
 	generator.calculate_moves_for(board);
-	int i = 0;
-	for(auto it = generator.begin(); it != generator.end(); ++it) {
-		i++;
-	}
-
-	// First move should have 20 outcomes.
-	CPPUNIT_ASSERT( i == 20 );
+	return generator.move_count();
 }
