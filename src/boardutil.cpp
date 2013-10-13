@@ -69,10 +69,11 @@ namespace cengine
 		board.pieces[BLACK_KING]	= 0x0;
 
 		char square;
-		uint64_t squareBit = 0x8000000000000000;
+		uint64_t squareBit = 0x100000000000000;
 		int unit_count = 0;
+		int i = 0;
 
-		while(input.good() && squareBit != 0)
+		while(input.good() && i < 64)
 		{
 			input >> square;
 
@@ -126,7 +127,12 @@ namespace cengine
 				board.pieces[unit] |= squareBit;
 			}
 
-			squareBit >>= 1;
+			i++;
+			if(i % 8 == 0) {
+				squareBit >>= 15;
+			} else {
+				squareBit <<= 1;
+			}
 		}
 
 		board.pieces[ALL_WHITE_PIECES] = 0x0;
@@ -150,9 +156,9 @@ namespace cengine
 
 	void BoardUtil::print_board(std::ostream& out, const Board& board)
 	{
-		uint64_t squareBit = 0x8000000000000000;
+		uint64_t squareBit = 0x100000000000000;
 
-		for(int i = 0; i < 64; i++, squareBit >>= 1)
+		for(int i = 1; i <= 64; i++)
 		{
 			if((board.pieces[ALL_BLACK_PIECES] & squareBit) != 0)
 			{
@@ -188,9 +194,11 @@ namespace cengine
 			{
 				out << ".";
 			}
-			if((i + 1) % 8 == 0) {
+			if(i % 8 == 0) {
+				squareBit >>= 15;
 				out << std::endl;
 			} else {
+				squareBit <<= 1;
 				out << " ";
 			}
 		}

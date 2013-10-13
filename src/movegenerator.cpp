@@ -4,13 +4,13 @@
 #include "move.h"
 #include "boardutil.h"
 
-#define WHITE_SQUARES 	0xAA55AA55AA55AA55
-#define BLACK_SQUARES 	0x55AA55AA55AA55AA
+#define WHITE_SQUARES 	0x55AA55AA55AA55AA
+#define BLACK_SQUARES 	0xAA55AA55AA55AA55
 
-#define LEFT_COL      	0x8080808080808080
+#define RIGHT_COL      	0x8080808080808080
 #define COL_B			0x0202020202020202
 #define COL_G			0x4040404040404040
-#define RIGHT_COL     	0x0101010101010101
+#define LEFT_COL     	0x0101010101010101
 
 #define TOP_ROW       	0xFF00000000000000
 #define ROW_7       	0x00FF000000000000
@@ -151,7 +151,6 @@ namespace cengine
 				}
 			}
 		}
-
 	}
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
@@ -299,25 +298,25 @@ namespace cengine
 				piece <<= 8;
 				break;
 			case UP_RIGHT:
-				piece <<= 7;
+				piece <<= 9;
 				break;
 			case RIGHT:
-				piece >>= 1;
+				piece <<= 1;
 				break;
 			case DOWN_RIGHT:
-				piece >>= 9;
+				piece >>= 7;
 				break;
 			case DOWN:
 				piece >>= 8;
 				break;
 			case DOWN_LEFT:
-				piece >>= 7;
+				piece >>= 9;
 				break;
 			case LEFT:
 				piece <<= 1;
 				break;
 			case UP_LEFT:
-				piece <<= 9;
+				piece <<= 7;
 				break;
 		}
 	}
