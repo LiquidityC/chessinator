@@ -34,11 +34,15 @@ void BoardUtilTest::test_castling_move()
 	Board b = BoardUtil::create_board();
 
 	Move c1("e1", "c1"); // Castling move
+
+	CPPUNIT_ASSERT ( b.whites_turn );
+
 	BoardUtil::perform_move(c1, b);
 
 	CPPUNIT_ASSERT ( b.pieces[WHITE_ROOKS] & static_cast<int64_t>(0x8) );
 	CPPUNIT_ASSERT ( b.pieces[WHITE_KING] & static_cast<int64_t>(0x4) );
 	CPPUNIT_ASSERT ( !b.white_long_castling_available );
+	CPPUNIT_ASSERT ( !b.whites_turn );
 
 	b = BoardUtil::create_board();
 

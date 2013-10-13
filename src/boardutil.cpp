@@ -211,6 +211,8 @@ namespace cengine
 		} else {
 			perform_regular_move(m, b);
 		}
+
+		b.whites_turn = !b.whites_turn;
 	}
 
 	void BoardUtil::perform_castling_move(const Move& m, Board& b)
