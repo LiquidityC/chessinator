@@ -46,6 +46,7 @@ namespace cengine
 		b.white_long_castling_available = true;
 		b.white_short_castling_available = true;
 		b.piece_taken = false;
+		b.whites_turn = true;
 
 		return b;
 	}

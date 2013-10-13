@@ -29,6 +29,7 @@ namespace cengine
 		bool white_long_castling_available, black_long_castling_available;
 		bool white_short_castling_available, black_short_castling_available;
 		bool piece_taken;
+		bool whites_turn;
 	} Board;
 }
 
