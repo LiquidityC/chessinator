@@ -150,6 +150,7 @@ namespace cengine
 		board.black_short_castling_available = true;
 		board.white_long_castling_available = true;
 		board.white_short_castling_available = true;
+		board.whites_turn = true;
 
 		return board;
 	}
@@ -195,7 +196,7 @@ namespace cengine
 				out << ".";
 			}
 			if(i % 8 == 0) {
-				squareBit >>= 15;
+				squareBit >>= 16;
 				out << std::endl;
 			} else {
 				squareBit <<= 1;

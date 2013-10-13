@@ -7,10 +7,10 @@
 #define WHITE_SQUARES 	0x55AA55AA55AA55AA
 #define BLACK_SQUARES 	0xAA55AA55AA55AA55
 
-#define RIGHT_COL      	0x8080808080808080
+#define LEFT_COL     	0x0101010101010101
 #define COL_B			0x0202020202020202
 #define COL_G			0x4040404040404040
-#define LEFT_COL     	0x0101010101010101
+#define RIGHT_COL      	0x8080808080808080
 
 #define TOP_ROW       	0xFF00000000000000
 #define ROW_7       	0x00FF000000000000
@@ -111,7 +111,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
-		uint64_t knights = b.pieces[WHITE_ROOKS];
+		uint64_t knights = b.pieces[WHITE_KNIGHTS];
 
 		while(knights != 0)
 		{
