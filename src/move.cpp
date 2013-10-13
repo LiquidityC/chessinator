@@ -55,7 +55,9 @@ namespace cengine
 	std::string Move::get_coordinate_for_bit(const uint64_t& bit) const
 	{
 		int position = 1;
-		while (bit>>position != 0) {
+		uint64_t i = bit >> 1;
+		while (i != 0) {
+			i >>= 1;
 			position++;
 		}
 

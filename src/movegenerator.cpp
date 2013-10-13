@@ -313,7 +313,7 @@ namespace cengine
 				piece >>= 9;
 				break;
 			case LEFT:
-				piece <<= 1;
+				piece >>= 1;
 				break;
 			case UP_LEFT:
 				piece <<= 7;

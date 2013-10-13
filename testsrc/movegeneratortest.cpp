@@ -11,10 +11,10 @@ CPPUNIT_TEST_SUITE_REGISTRATION( MoveGeneratorTest );
 
 void MoveGeneratorTest::test_move()
 {
-	CPPUNIT_ASSERT(test_board("res/startboard.txt") == 20);
+	CPPUNIT_ASSERT(test_board("res/testqueen.txt") == 32);
 	CPPUNIT_ASSERT(test_board("res/testking.txt") == 8);
-	CPPUNIT_ASSERT(test_board("res/testqueen.txt") == 30);
-	CPPUNIT_ASSERT(test_board("res/testcastling.txt") == 24);
+	CPPUNIT_ASSERT(test_board("res/startboard.txt") == 20);
+	CPPUNIT_ASSERT(test_board("res/testcastling.txt") == 26);
 }
 
 int MoveGeneratorTest::test_board(std::string filename)
