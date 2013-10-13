@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cassert>
+#include <iostream>
 
 #include "boardutil.h"
 #include "move.h"
@@ -40,7 +41,7 @@ namespace cengine
 		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
 			b.pieces[ALL_BLACK_PIECES] |= b.pieces[i];
 		}
-		
+
 		b.black_long_castling_available = true;
 		b.black_short_castling_available = true;
 		b.white_long_castling_available = true;
@@ -49,6 +50,150 @@ namespace cengine
 		b.whites_turn = true;
 
 		return b;
+	}
+
+	Board BoardUtil::create_board(std::ifstream& input)
+	{
+		Board board;
+		board.pieces[WHITE_PAWNS] 	= 0x0;
+		board.pieces[WHITE_ROOKS] 	= 0x0;
+		board.pieces[WHITE_KNIGHTS]	= 0x0;
+		board.pieces[WHITE_BISHOPS]	= 0x0;
+		board.pieces[WHITE_QUEEN]	= 0x0;
+		board.pieces[WHITE_KING]	= 0x0;
+		board.pieces[BLACK_PAWNS] 	= 0x0;
+		board.pieces[BLACK_ROOKS] 	= 0x0;
+		board.pieces[BLACK_KNIGHTS]	= 0x0;
+		board.pieces[BLACK_BISHOPS]	= 0x0;
+		board.pieces[BLACK_QUEEN]	= 0x0;
+		board.pieces[BLACK_KING]	= 0x0;
+
+		char square;
+		uint64_t squareBit = 0x8000000000000000;
+		int unit_count = 0;
+
+		while(input.good() && squareBit != 0)
+		{
+			input >> square;
+
+			Units unit;
+
+			switch(square)
+			{
+				case 'r':
+					unit = WHITE_ROOKS;
+					break;
+				case 'n':
+					unit = WHITE_KNIGHTS;
+					break;
+				case 'b':
+					unit = WHITE_BISHOPS;
+					break;
+				case 'q':
+					unit = WHITE_QUEEN;
+					break;
+				case 'k':
+					unit = WHITE_KING;
+					break;
+				case 'p':
+					unit = WHITE_PAWNS;
+					break;
+				case 'R':
+					unit = BLACK_ROOKS;
+					break;
+				case 'N':
+					unit = BLACK_KNIGHTS;
+					break;
+				case 'B':
+					unit = BLACK_BISHOPS;
+					break;
+				case 'Q':
+					unit = BLACK_QUEEN;
+					break;
+				case 'K':
+					unit = BLACK_KING;
+					break;
+				case 'P':
+					unit = BLACK_PAWNS;
+					break;
+				default:
+					unit = PIECES_SIZE;
+					break;
+			}
+
+			if(unit != PIECES_SIZE) {
+				unit_count++;
+				board.pieces[unit] |= squareBit;
+			}
+
+			squareBit >>= 1;
+		}
+
+		board.pieces[ALL_WHITE_PIECES] = 0x0;
+		board.pieces[ALL_BLACK_PIECES] = 0x0;
+
+		for (int i = WHITE_PAWNS; i <= WHITE_KING; i++) {
+			board.pieces[ALL_WHITE_PIECES] |= board.pieces[i];
+		}
+		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
+			board.pieces[ALL_BLACK_PIECES] |= board.pieces[i];
+		}
+
+		board.piece_taken = unit_count < 32;
+		board.black_long_castling_available = true;
+		board.black_short_castling_available = true;
+		board.white_long_castling_available = true;
+		board.white_short_castling_available = true;
+
+		return board;
+	}
+
+	void BoardUtil::print_board(std::ostream& out, const Board& board)
+	{
+		uint64_t squareBit = 0x8000000000000000;
+
+		for(int i = 0; i < 64; i++, squareBit >>= 1)
+		{
+			if((board.pieces[ALL_BLACK_PIECES] & squareBit) != 0)
+			{
+				if((board.pieces[BLACK_PAWNS] & squareBit) != 0)
+					out << "P";
+				if((board.pieces[BLACK_ROOKS] & squareBit) != 0)
+					out << "R";
+				if((board.pieces[BLACK_KNIGHTS] & squareBit) != 0)
+					out << "N";
+				if((board.pieces[BLACK_BISHOPS] & squareBit) != 0)
+					out << "B";
+				if((board.pieces[BLACK_QUEEN] & squareBit) != 0)
+					out << "Q";
+				if((board.pieces[BLACK_KING] & squareBit) != 0)
+					out << "K";
+			}
+			else if((board.pieces[ALL_WHITE_PIECES] & squareBit) != 0)
+			{
+				if((board.pieces[WHITE_PAWNS] & squareBit) != 0)
+					out << "p";
+				if((board.pieces[WHITE_ROOKS] & squareBit) != 0)
+					out << "r";
+				if((board.pieces[WHITE_KNIGHTS] & squareBit) != 0)
+					out << "n";
+				if((board.pieces[WHITE_BISHOPS] & squareBit) != 0)
+					out << "b";
+				if((board.pieces[WHITE_QUEEN] & squareBit) != 0)
+					out << "q";
+				if((board.pieces[WHITE_KING] & squareBit) != 0)
+					out << "k";
+			}
+			else
+			{
+				out << ".";
+			}
+			if((i + 1) % 8 == 0) {
+				out << std::endl;
+			} else {
+				out << " ";
+			}
+		}
 	}
 
 	void BoardUtil::perform_move(const Move& m, Board& b)

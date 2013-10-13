@@ -2,6 +2,7 @@
 #define _BOARD_UTIL_H
 
 #include <string>
+#include <fstream>
 
 #include "board.h"
 
@@ -25,8 +26,11 @@ namespace cengine
 
 			static Board create_board();
 
-			static void perform_move(const Move&, Board&);
+			static Board create_board(std::ifstream&);
 
+			static void print_board(std::ostream&, const Board&);
+
+			static void perform_move(const Move&, Board&);
 	};
 }
 
