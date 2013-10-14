@@ -113,6 +113,9 @@ namespace cengine
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
 		uint64_t knights = b.pieces[WHITE_KNIGHTS];
+		if (!b.whites_turn) {
+			knights = b.pieces[BLACK_KNIGHTS];
+		}
 
 		while(knights != 0)
 		{
@@ -203,53 +206,83 @@ namespace cengine
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
 		uint64_t king = b.pieces[WHITE_KING];
+		if (!b.whites_turn) {
+			king = b.pieces[BLACK_KING];
+		}
 
-		if ((king & LEFT_COL) == 0) {
-			if ((king>>1 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+		bool on_top_row = (king & TOP_ROW) != 0;
+		bool on_bottom_row = (king & BOTTOM_ROW) != 0;
+		bool on_left_col = (king & LEFT_COL) != 0;
+		bool on_right_col = (king & RIGHT_COL) != 0;
+
+		if (!on_left_col) {
+			if ((king>>1 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & TOP_ROW) == 0) {
+			if ((king<<7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_top_row) {
 				add_move(b, king, king<<7);
 			}
-			if ((king>>9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & BOTTOM_ROW) == 0) {
+			if ((king>>9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_bottom_row) {
 				add_move(b, king, king<<9);
 			}
 		}
-		if ((king & RIGHT_COL) == 0) {
-			if ((king<<1 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+		if (!on_right_col) {
+			if ((king<<1 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & TOP_ROW) == 0) {
+			if ((king<<9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_top_row) {
 				add_move(b, king, king<<9);
 			}
-			if ((king>>7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king & BOTTOM_ROW) == 0) {
+			if ((king>>7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_bottom_row) {
 				add_move(b, king, king>>7);
 			}
 		}
-		if ((king & TOP_ROW) == 0) {
-			if ((king<<8 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+		if (!on_top_row) {
+			if ((king<<8 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
 				add_move(b, king, king<<8);
 			}
 		}
-		if ((king & BOTTOM_ROW) == 0) {
-			if ((king>>8 & b.pieces[ALL_WHITE_PIECES]) == 0) {
+		if (!on_bottom_row) {
+			if ((king>>8 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
 				add_move(b, king, king>>8);
 			}
 		}
 	}
-	
+
 	void MoveGenerator::calculate_castling_moves(const Board& b)
 	{
-		bool black_pieces_blocking_long = (b.pieces[ALL_BLACK_PIECES] & 0xE) != 0;
-		bool black_pieces_blocking_short = (b.pieces[ALL_BLACK_PIECES] & 0x60) != 0;
-		bool white_pieces_blocking_long = (b.pieces[ALL_WHITE_PIECES] & 0xE) != 0;
-		bool white_pieces_blocking_short = (b.pieces[ALL_WHITE_PIECES] & 0x60) != 0;
+		uint64_t long_block = 0xE;
+		uint64_t short_block = 0x60;
 
-		if ( !black_pieces_blocking_long && !white_pieces_blocking_long && b.white_long_castling_available) {
-			add_move(b, 0x10, 0x80);
+		bool long_castling_available = b.white_long_castling_available;
+		bool short_castling_available = b.white_short_castling_available;
+
+		uint64_t castle_from = 0x10;
+		uint64_t short_castle_to = 0x80;
+		uint64_t long_castle_to = 0x4;
+
+		if (!b.whites_turn) {
+			long_block <<= 56;
+			short_block <<= 56;
+
+			long_castling_available = b.black_long_castling_available;
+			short_castling_available = b.black_short_castling_available;
+
+			castle_from <<= 56;
+			long_castle_to <<= 56;
+			short_castle_to <<= 56;
 		}
-		if ( !black_pieces_blocking_short && !white_pieces_blocking_short && b.white_short_castling_available) {
-			add_move(b, 0x10, 0x80);
+
+		bool black_pieces_blocking_long = (b.pieces[ALL_BLACK_PIECES] & long_block) != 0;
+		bool black_pieces_blocking_short = (b.pieces[ALL_BLACK_PIECES] & short_block) != 0;
+		bool white_pieces_blocking_long = (b.pieces[ALL_WHITE_PIECES] & long_block) != 0;
+		bool white_pieces_blocking_short = (b.pieces[ALL_WHITE_PIECES] & short_block) != 0;
+
+		if ( !black_pieces_blocking_long && !white_pieces_blocking_long && long_castling_available) {
+			add_move(b, castle_from, long_castle_to);
+		}
+		if ( !black_pieces_blocking_short && !white_pieces_blocking_short && short_castling_available) {
+			add_move(b, castle_from, short_castle_to);
 		}
 	}
 

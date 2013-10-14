@@ -16,9 +16,10 @@ void MoveGeneratorTest::test_move()
 	CPPUNIT_ASSERT(test_board("res/startboard.txt") == 20);
 	CPPUNIT_ASSERT(test_board("res/testcastling.txt") == 26);
 	CPPUNIT_ASSERT(test_board("res/testcastlingblock.txt") == 24);
+	CPPUNIT_ASSERT(test_board("res/testblackpieces.txt", false) == 12);
 }
 
-int MoveGeneratorTest::test_board(std::string filename)
+int MoveGeneratorTest::test_board(std::string filename, bool whites_turn)
 {
 	std::ifstream file;
 	file.open(filename);
@@ -27,6 +28,7 @@ int MoveGeneratorTest::test_board(std::string filename)
 	cengine::Board board = cengine::BoardUtil::create_board(file);
 	file.close();
 
+	board.whites_turn = whites_turn;
 	generator.calculate_moves_for(board);
 
 	return generator.move_count();

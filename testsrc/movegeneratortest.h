@@ -16,7 +16,7 @@ class MoveGeneratorTest : public GenericFixture
 		void test_move();
 
 	private:
-		int test_board(std::string);
+		int test_board(std::string, bool = true);
 };
 
 #endif
