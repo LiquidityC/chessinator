@@ -30,6 +30,9 @@ namespace cengine
 		calculate_bishop_moves_for(b);
 		calculate_queen_moves_for(b);
 		calculate_king_moves_for(b);
+
+		// TODO: Fix the crash
+		//calculate_castling_moves(b);
 	}
 
 	void MoveGenerator::calculate_pawn_moves_for(const Board& b)
@@ -118,35 +121,45 @@ namespace cengine
 			uint64_t knight = (knights & (knights-1)) ^ knights;
 			knights &= knights-1;
 
-			if ( (knight & LEFT_COL) == 0) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<15) == 0 && (knight & TOP_ROW & ROW_7) == 0) {
+			bool on_bottom_row = (knight & BOTTOM_ROW) != 0;
+			bool on_row_2 = (knight & ROW_2) != 0;
+			bool on_row_7 = (knight & ROW_7) != 0;
+			bool on_top_row = (knight & TOP_ROW) != 0;
+
+			bool on_left_col = (knight & LEFT_COL) != 0;
+			bool on_col_b = (knight & COL_B) != 0;
+			bool on_col_g = (knight & COL_G) != 0;
+			bool on_right_col = (knight & RIGHT_COL) != 0;
+
+			if ( !on_left_col ) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<15) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<15);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>17) == 0 && (knight & BOTTOM_ROW & ROW_2) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>17) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>17);
 				}
 			}
-			if ( (knight & LEFT_COL & COL_B) == 0) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<6) == 0 && (knight & TOP_ROW) == 0) {
+			if ( !on_left_col && !on_col_b ) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<6) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<6);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>10) == 0 && (knight & BOTTOM_ROW) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>10) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>10);
 				}
 			}
-			if ( (knight & RIGHT_COL) == 0) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<17) == 0 && (knight & TOP_ROW & ROW_7) == 0) {
+			if ( !on_right_col ) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<17) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<17);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>15) == 0 && (knight & BOTTOM_ROW & ROW_2) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>15) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>15);
 				}
 			}
-			if ( (knight & RIGHT_COL & COL_G) == 0) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<10) == 0 && (knight & TOP_ROW) == 0) {
+			if ( !on_right_col && !on_col_g ) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight<<10) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<10);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>6) == 0 && (knight & BOTTOM_ROW) == 0) {
+				if ((b.pieces[ALL_WHITE_PIECES] & knight>>6) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>6);
 				}
 			}
