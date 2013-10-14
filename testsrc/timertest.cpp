@@ -7,7 +7,9 @@ CPPUNIT_TEST_SUITE_REGISTRATION( TimerTest );
 
 void TimerTest::test_timer()
 {
-	cengine::Timer t;
+
+	currentTimeMock = 0;
+	cengine::Timer t(timef);
 
 	CPPUNIT_ASSERT ( !t.is_started() );
 	CPPUNIT_ASSERT ( !t.is_paused() );
@@ -17,7 +19,7 @@ void TimerTest::test_timer()
 
 	CPPUNIT_ASSERT ( t.is_started() );
 
-	sleep(1);
+	currentTimeMock += 1;
 	t.pause();
 
 	CPPUNIT_ASSERT ( t.get_time() > 0 );
@@ -25,12 +27,12 @@ void TimerTest::test_timer()
 	CPPUNIT_ASSERT ( t.is_paused() );
 
 	unsigned int pause_time = t.get_time();
-	sleep(1);
+	currentTimeMock += 1;
 
 	CPPUNIT_ASSERT ( pause_time == t.get_time() );
 
 	t.unpause();
-	sleep(1);
+	currentTimeMock += 1;
 
 	CPPUNIT_ASSERT ( !t.is_paused() );
 	CPPUNIT_ASSERT ( pause_time < t.get_time() );
@@ -40,4 +42,10 @@ void TimerTest::test_timer()
 	CPPUNIT_ASSERT ( !t.is_started() );
 	CPPUNIT_ASSERT ( !t.is_paused() );
 	CPPUNIT_ASSERT ( t.get_time() == 0 );
+}
+
+time_t timef(time_t* timer)
+{
+	*timer = currentTimeMock;
+	return currentTimeMock;
 }

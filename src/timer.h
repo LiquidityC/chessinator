@@ -10,10 +10,13 @@ namespace cengine
 		private:
 			time_t started_time, paused_time;
 			bool started, paused;
+			time_t (*timeFunction)(time_t*);
 
 		public:
 
-			Timer() : started(false), paused(false) { };
+			Timer();
+
+			Timer(time_t (*f)(time_t*));
 
 			unsigned int get_time() const;
 

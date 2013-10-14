@@ -19,4 +19,8 @@ class TimerTest : public GenericFixture
 		void test_timer();
 };
 
+time_t currentTimeMock;
+
+time_t timef(time_t* timer);
+
 #endif

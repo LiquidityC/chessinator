@@ -4,6 +4,16 @@
 
 namespace cengine
 {
+	Timer::Timer() : started(false), paused(false)
+	{
+		timeFunction = time;
+	}
+
+	Timer::Timer(time_t (*f)(time_t*)) : started(false), paused(false)
+	{
+		timeFunction = f;
+	}
+
 	unsigned int Timer::get_time() const
 	{
 		if (started) {
@@ -12,7 +22,7 @@ namespace cengine
 			if (paused) {
 				return paused_time;
 			} else {
-				time(&current_time);
+				timeFunction(&current_time);
 				return current_time - started_time;
 			}
 		}
@@ -38,13 +48,13 @@ namespace cengine
 	void Timer::start()
 	{
 		started = true;
-		time(&started_time);
+		timeFunction(&started_time);
 	}
 
 	void Timer::pause()
 	{
 		paused = true;
-		time(&paused_time);
+		timeFunction(&paused_time);
 		paused_time -= started_time;
 	}
 	
