@@ -30,9 +30,7 @@ namespace cengine
 		calculate_bishop_moves_for(b);
 		calculate_queen_moves_for(b);
 		calculate_king_moves_for(b);
-
-		// TODO: Fix the crash
-		//calculate_castling_moves(b);
+		calculate_castling_moves(b);
 	}
 
 	void MoveGenerator::calculate_pawn_moves_for(const Board& b)
@@ -242,10 +240,10 @@ namespace cengine
 	
 	void MoveGenerator::calculate_castling_moves(const Board& b)
 	{
-		bool black_pieces_blocking_long = (b.pieces[ALL_BLACK_PIECES] & static_cast<uint64_t>(0x60)) == 0;
-		bool black_pieces_blocking_short = (b.pieces[ALL_BLACK_PIECES] & static_cast<uint64_t>(0xE)) == 0;
-		bool white_pieces_blocking_long = (b.pieces[ALL_WHITE_PIECES] & static_cast<uint64_t>(0x60)) == 0;
-		bool white_pieces_blocking_short = (b.pieces[ALL_WHITE_PIECES] & static_cast<uint64_t>(0xE)) == 0;
+		bool black_pieces_blocking_long = (b.pieces[ALL_BLACK_PIECES] & 0xE) != 0;
+		bool black_pieces_blocking_short = (b.pieces[ALL_BLACK_PIECES] & 0x60) != 0;
+		bool white_pieces_blocking_long = (b.pieces[ALL_WHITE_PIECES] & 0xE) != 0;
+		bool white_pieces_blocking_short = (b.pieces[ALL_WHITE_PIECES] & 0x60) != 0;
 
 		if ( !black_pieces_blocking_long && !white_pieces_blocking_long && b.white_long_castling_available) {
 			add_move(b, 0x10, 0x80);

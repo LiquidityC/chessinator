@@ -146,10 +146,36 @@ namespace cengine
 		}
 
 		board.piece_taken = unit_count < 32;
-		board.black_long_castling_available = true;
-		board.black_short_castling_available = true;
-		board.white_long_castling_available = true;
-		board.white_short_castling_available = true;
+
+		uint64_t blackKingStart = 0x1000000000000000;
+		uint64_t blackRookLeftStart = 0x100000000000000;
+		uint64_t blackRookRightStart = 0x8000000000000000;
+		uint64_t whiteKingStart = 0x10;
+		uint64_t whiteRookLeftStart = 0x1;
+		uint64_t whiteRookRightStart = 0x80;
+		board.black_long_castling_available = false;
+		board.black_short_castling_available = false;
+		board.white_long_castling_available = false;
+		board.white_short_castling_available = false;
+
+		if((board.pieces[BLACK_KING] & blackKingStart) != 0) {
+			if((board.pieces[BLACK_ROOKS] & blackRookLeftStart) != 0) {
+				board.black_long_castling_available = true;
+			}
+			if((board.pieces[BLACK_ROOKS] & blackRookRightStart) != 0) {
+				board.black_short_castling_available = true;
+			}
+		}
+
+		if((board.pieces[WHITE_KING] & whiteKingStart) != 0) {
+			if((board.pieces[WHITE_ROOKS] & whiteRookLeftStart) != 0) {
+				board.white_long_castling_available = true;
+			}
+			if((board.pieces[WHITE_ROOKS] & whiteRookRightStart) != 0) {
+				board.white_short_castling_available = true;
+			}
+		}
+
 		board.whites_turn = true;
 
 		return board;
