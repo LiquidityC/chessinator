@@ -12,7 +12,9 @@ namespace cengine
 
 		public:
 
-			CountdownTimer() : countdown_time(300) {  };
+			CountdownTimer() : Timer(), countdown_time(300) {  };
+
+			CountdownTimer(time_t (*f)(time_t*)) : Timer(f), countdown_time(300) {  };
 
 			void set_time(unsigned int);
 

@@ -17,4 +17,8 @@ class CountdownTimerTest : public GenericFixture
 
 };
 
+int countdownMockTime;
+
+time_t countdownMockTimeFunction(time_t*);
+
 #endif
