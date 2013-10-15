@@ -5,7 +5,6 @@
 #include "movegeneratortest.h"
 #include "../src/movegenerator.h"
 #include "../src/board.h"
-#include "../src/boardutil.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( MoveGeneratorTest );
 
@@ -26,10 +25,10 @@ int MoveGeneratorTest::test_board(std::string filename, bool whites_turn)
 	file.open(filename);
 
 	cengine::MoveGenerator generator;
-	cengine::Board board = cengine::BoardUtil::create_board(file);
+	cengine::Board board(file);
 	file.close();
 
-	board.whites_turn = whites_turn;
+	board.set_whites_turn(whites_turn);
 	generator.calculate_moves_for(board);
 
 	return generator.move_count();

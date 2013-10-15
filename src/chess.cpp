@@ -5,7 +5,6 @@
 #include "iocommunicator.h"
 #include "iocommand.h"
 #include "commandhandler.h"
-#include "boardutil.h"
 #include "board.h"
 
 namespace cengine {
@@ -14,7 +13,7 @@ namespace cengine {
 	{
 		IoCommunicator io;
 		CommandHandler handler;
-		Board b = BoardUtil::create_board();
+		Board b;
 
 		while (true) {
 			IoCommand c = io.read_command();
@@ -26,7 +25,7 @@ namespace cengine {
 
 			if (c.is_move()) {
 				Move m = c.get_move();
-				BoardUtil::perform_move(m, b);
+				b.perform_move(m);
 			} else {
 				response = handler.parse_command(c);
 			}

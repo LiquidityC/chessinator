@@ -4,7 +4,7 @@ namespace cengine
 {
 	int Evaluator::evaluate(const Board& b)
 	{
-		int score = b.pieces[ALL_BLACK_PIECES] ^ b.pieces[ALL_WHITE_PIECES];
+		int score = b.get_pieces_for(ALL_BLACK_PIECES) ^ b.get_pieces_for(ALL_WHITE_PIECES);
 		return ~score;
 	}
 }

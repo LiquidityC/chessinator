@@ -2,7 +2,6 @@
 
 #include "movegenerator.h"
 #include "move.h"
-#include "boardutil.h"
 
 #define WHITE_SQUARES 	0x55AA55AA55AA55AA
 #define BLACK_SQUARES 	0xAA55AA55AA55AA55
@@ -35,12 +34,12 @@ namespace cengine
 
 	void MoveGenerator::calculate_pawn_moves_for(const Board& b)
 	{
-		uint64_t pawns = b.whites_turn ? b.pieces[WHITE_PAWNS] : b.pieces[BLACK_PAWNS];
-		Units enemyPieces = b.whites_turn ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
-		uint64_t allPieces = b.pieces[ALL_WHITE_PIECES] | b.pieces[ALL_BLACK_PIECES];
+		uint64_t pawns = b.is_whites_turn() ? b.get_pieces_for(WHITE_PAWNS) : b.get_pieces_for(BLACK_PAWNS);
+		Unit enemyPieces = b.is_whites_turn() ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
+		uint64_t allPieces = b.get_pieces_for(ALL_WHITE_PIECES) | b.get_pieces_for(ALL_BLACK_PIECES);
 
-		uint64_t end_row = b.whites_turn ? TOP_ROW : BOTTOM_ROW;
-		uint64_t start_row = b.whites_turn ? ROW_2 : ROW_7;
+		uint64_t end_row = b.is_whites_turn() ? TOP_ROW : BOTTOM_ROW;
+		uint64_t start_row = b.is_whites_turn() ? ROW_2 : ROW_7;
 
 		while(pawns != 0)
 		{
@@ -54,7 +53,7 @@ namespace cengine
 
 			bool startPosition = (pawn & start_row) != 0;
 
-			uint64_t destination = b.whites_turn ? pawn << 8 : pawn >> 8;
+			uint64_t destination = b.is_whites_turn() ? pawn << 8 : pawn >> 8;
 
 			bool oneStepFree = (destination & allPieces) == 0;
 
@@ -67,7 +66,7 @@ namespace cengine
 			// Two step forward
 			if(oneStepFree && startPosition)
 			{
-				destination = b.whites_turn ? pawn << 16 : pawn >> 16;
+				destination = b.is_whites_turn() ? pawn << 16 : pawn >> 16;
 				bool twoStepFree = (destination & allPieces) == 0;
 				if(twoStepFree)
 				{
@@ -78,8 +77,8 @@ namespace cengine
 			// Attack left
 			if((LEFT_COL & pawn) == 0)
 			{
-				destination = b.whites_turn ? pawn << 7 : pawn >> 9;
-				if((destination & b.pieces[enemyPieces]) != 0)
+				destination = b.is_whites_turn() ? pawn << 7 : pawn >> 9;
+				if((destination & b.get_pieces_for(enemyPieces)) != 0)
 				{
 					add_move(b, pawn, destination);
 				}
@@ -88,8 +87,8 @@ namespace cengine
 			// Attack right
 			if((RIGHT_COL & pawn) == 0)
 			{
-				destination = b.whites_turn ? pawn << 9 : pawn >> 7;
-				if((destination & b.pieces[enemyPieces]) != 0)
+				destination = b.is_whites_turn() ? pawn << 9 : pawn >> 7;
+				if((destination & b.get_pieces_for(enemyPieces)) != 0)
 				{
 					add_move(b, pawn, destination);
 				}
@@ -99,7 +98,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_rook_moves_for(const Board& b)
 	{
-		uint64_t rooks = b.whites_turn ? b.pieces[WHITE_ROOKS] : b.pieces[BLACK_ROOKS];
+		uint64_t rooks = b.is_whites_turn() ? b.get_pieces_for(WHITE_ROOKS) : b.get_pieces_for(BLACK_ROOKS);
 
 		while(rooks != 0)
 		{
@@ -115,11 +114,11 @@ namespace cengine
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
-		Units friendly_pieces = ALL_WHITE_PIECES;
-		uint64_t knights = b.pieces[WHITE_KNIGHTS];
-		if (!b.whites_turn) {
+		Unit friendly_pieces = ALL_WHITE_PIECES;
+		uint64_t knights = b.get_pieces_for(WHITE_KNIGHTS);
+		if (!b.is_whites_turn()) {
 			friendly_pieces = ALL_BLACK_PIECES;
-			knights = b.pieces[BLACK_KNIGHTS];
+			knights = b.get_pieces_for(BLACK_KNIGHTS);
 		}
 
 		while(knights != 0)
@@ -138,34 +137,34 @@ namespace cengine
 			bool on_right_col = (knight & RIGHT_COL) != 0;
 
 			if ( !on_left_col ) {
-				if ((b.pieces[friendly_pieces] & knight<<15) == 0 && (!on_top_row && !on_row_7)) {
+				if ((b.get_pieces_for(friendly_pieces) & knight<<15) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<15);
 				}
-				if ((b.pieces[friendly_pieces] & knight>>17) == 0 && (!on_bottom_row && !on_row_2)) {
+				if ((b.get_pieces_for(friendly_pieces) & knight>>17) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>17);
 				}
 			}
 			if ( !on_left_col && !on_col_b ) {
-				if ((b.pieces[friendly_pieces] & knight<<6) == 0 && !on_top_row) {
+				if ((b.get_pieces_for(friendly_pieces) & knight<<6) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<6);
 				}
-				if ((b.pieces[friendly_pieces] & knight>>10) == 0 && !on_bottom_row) {
+				if ((b.get_pieces_for(friendly_pieces) & knight>>10) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>10);
 				}
 			}
 			if ( !on_right_col ) {
-				if ((b.pieces[friendly_pieces] & knight<<17) == 0 && (!on_top_row && !on_row_7)) {
+				if ((b.get_pieces_for(friendly_pieces) & knight<<17) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<17);
 				}
-				if ((b.pieces[friendly_pieces] & knight>>15) == 0 && (!on_bottom_row && !on_row_2)) {
+				if ((b.get_pieces_for(friendly_pieces) & knight>>15) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>15);
 				}
 			}
 			if ( !on_right_col && !on_col_g ) {
-				if ((b.pieces[friendly_pieces] & knight<<10) == 0 && !on_top_row) {
+				if ((b.get_pieces_for(friendly_pieces) & knight<<10) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<10);
 				}
-				if ((b.pieces[friendly_pieces] & knight>>6) == 0 && !on_bottom_row) {
+				if ((b.get_pieces_for(friendly_pieces) & knight>>6) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>6);
 				}
 			}
@@ -174,7 +173,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
 	{
-		uint64_t bishops = b.whites_turn ? b.pieces[WHITE_BISHOPS] : b.pieces[BLACK_BISHOPS];
+		uint64_t bishops = b.is_whites_turn() ? b.get_pieces_for(WHITE_BISHOPS) : b.get_pieces_for(BLACK_BISHOPS);
 
 		while(bishops != 0)
 		{
@@ -190,7 +189,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_queen_moves_for(const Board& b)
 	{
-		uint64_t queens = b.whites_turn ? b.pieces[WHITE_QUEEN] : b.pieces[BLACK_QUEEN];
+		uint64_t queens = b.is_whites_turn() ? b.get_pieces_for(WHITE_QUEEN) : b.get_pieces_for(BLACK_QUEEN);
 
 		while(queens != 0)
 		{
@@ -210,9 +209,9 @@ namespace cengine
 
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
-		uint64_t king = b.pieces[WHITE_KING];
-		if (!b.whites_turn) {
-			king = b.pieces[BLACK_KING];
+		uint64_t king = b.get_pieces_for(WHITE_KING);
+		if (!b.is_whites_turn()) {
+			king = b.get_pieces_for(BLACK_KING);
 		}
 
 		bool on_top_row = (king & TOP_ROW) != 0;
@@ -221,34 +220,34 @@ namespace cengine
 		bool on_right_col = (king & RIGHT_COL) != 0;
 
 		if (!on_left_col) {
-			if ((king>>1 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
+			if ((king>>1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_top_row) {
+			if ((king<<7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
 				add_move(b, king, king<<7);
 			}
-			if ((king>>9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_bottom_row) {
+			if ((king>>9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
 				add_move(b, king, king<<9);
 			}
 		}
 		if (!on_right_col) {
-			if ((king<<1 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
+			if ((king<<1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<9 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_top_row) {
+			if ((king<<9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
 				add_move(b, king, king<<9);
 			}
-			if ((king>>7 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0 && !on_bottom_row) {
+			if ((king>>7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
 				add_move(b, king, king>>7);
 			}
 		}
 		if (!on_top_row) {
-			if ((king<<8 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
+			if ((king<<8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king<<8);
 			}
 		}
 		if (!on_bottom_row) {
-			if ((king>>8 & b.pieces[ALL_WHITE_PIECES]) == 0 && (king>>1 & b.pieces[ALL_BLACK_PIECES]) == 0) {
+			if ((king>>8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>8);
 			}
 		}
@@ -259,29 +258,29 @@ namespace cengine
 		uint64_t long_block = 0xE;
 		uint64_t short_block = 0x60;
 
-		bool long_castling_available = b.white_long_castling_available;
-		bool short_castling_available = b.white_short_castling_available;
+		bool long_castling_available = b.is_white_long_castling_available();
+		bool short_castling_available = b.is_white_short_castling_available();
 
 		uint64_t castle_from = 0x10;
 		uint64_t short_castle_to = 0x80;
 		uint64_t long_castle_to = 0x4;
 
-		if (!b.whites_turn) {
+		if (!b.is_whites_turn()) {
 			long_block <<= 56;
 			short_block <<= 56;
 
-			long_castling_available = b.black_long_castling_available;
-			short_castling_available = b.black_short_castling_available;
+			long_castling_available = b.is_black_long_castling_available();
+			short_castling_available = b.is_black_short_castling_available();
 
 			castle_from <<= 56;
 			long_castle_to <<= 56;
 			short_castle_to <<= 56;
 		}
 
-		bool black_pieces_blocking_long = (b.pieces[ALL_BLACK_PIECES] & long_block) != 0;
-		bool black_pieces_blocking_short = (b.pieces[ALL_BLACK_PIECES] & short_block) != 0;
-		bool white_pieces_blocking_long = (b.pieces[ALL_WHITE_PIECES] & long_block) != 0;
-		bool white_pieces_blocking_short = (b.pieces[ALL_WHITE_PIECES] & short_block) != 0;
+		bool black_pieces_blocking_long = (b.get_pieces_for(ALL_BLACK_PIECES) & long_block) != 0;
+		bool black_pieces_blocking_short = (b.get_pieces_for(ALL_BLACK_PIECES) & short_block) != 0;
+		bool white_pieces_blocking_long = (b.get_pieces_for(ALL_WHITE_PIECES) & long_block) != 0;
+		bool white_pieces_blocking_short = (b.get_pieces_for(ALL_WHITE_PIECES) & short_block) != 0;
 
 		if ( !black_pieces_blocking_long && !white_pieces_blocking_long && long_castling_available) {
 			add_move(b, castle_from, long_castle_to);
@@ -294,8 +293,8 @@ namespace cengine
 	void MoveGenerator::calculate_direction_moves(const Board& board, const uint64_t piece, const Direction direction)
 	{
 		uint64_t position = piece;
-		Units enemyPieces = board.whites_turn ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
-		Units friendPieces = board.whites_turn ? ALL_WHITE_PIECES : ALL_BLACK_PIECES;
+		Unit enemyPieces = board.is_whites_turn() ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
+		Unit friendPieces = board.is_whites_turn() ? ALL_WHITE_PIECES : ALL_BLACK_PIECES;
 
 		uint64_t endSquares;
 
@@ -331,12 +330,12 @@ namespace cengine
 		{
 			shift_piece(position, direction);
 
-			if((position & board.pieces[enemyPieces]) != 0)
+			if((position & board.get_pieces_for(enemyPieces)) != 0)
 			{
 				add_move(board, piece, position);
 				break;
 			}
-			if((position & board.pieces[friendPieces]) != 0)
+			if((position & board.get_pieces_for(friendPieces)) != 0)
 			{
 				break;
 			}
@@ -385,7 +384,7 @@ namespace cengine
 		Board new_board = board;
 		Move m(from, to);
 
-		BoardUtil::perform_move(m, new_board);
+		new_board.perform_move(m);
 
 		possible_moves.push_back(new_board);
 	}

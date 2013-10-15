@@ -1,13 +1,13 @@
-#ifndef _BOARD_UTIL_TEST_H
-#define _BOARD_UTIL_TEST_H
+#ifndef _BOARD_TEST_H
+#define _BOARD_TEST_H
 
 #include "genericfixture.h"
 
-class BoardUtilTest : public GenericFixture
+class BoardTest : public GenericFixture
 {
 	public:
 
-		CPPUNIT_TEST_SUITE( BoardUtilTest );
+		CPPUNIT_TEST_SUITE( BoardTest );
 		CPPUNIT_TEST( test_move );
 		CPPUNIT_TEST( test_castling_move );
 		CPPUNIT_TEST( test_take );
