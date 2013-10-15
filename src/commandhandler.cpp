@@ -45,11 +45,11 @@ namespace cengine {
 		} else if (cmd == "protover")  {
 			protover_cmd(tokens[1]);
 		} else if (cmd == "name")  {
-			// Opponent name
+			// Nothing
 		} else if (cmd == "accepted")  {
-			// Opponent name
+			// Nothing
 		} else if (cmd == "rejected")  {
-			// Opponent name
+			//Nothing
 		} else {
 			return IoCommand("Error (unknown command): " + cmd);
 		}
@@ -69,7 +69,10 @@ namespace cengine {
 			<< "myname=\"Batman\" "
 			<< "variants=\"normal\" "
 			<< "colors=0 "
-			<< "name=1";
+			<< "name=1 "
+			<< "sigint=0 "
+			<< "sigterm=0 "
+			<< "done=1";
 
 		cmd =  ss.str();
 

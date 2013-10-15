@@ -4,3 +4,6 @@ chess
 test
 xboard.debug
 *.swp
+game.000
+log.000
+players.dat
