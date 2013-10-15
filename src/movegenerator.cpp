@@ -35,36 +35,39 @@ namespace cengine
 
 	void MoveGenerator::calculate_pawn_moves_for(const Board& b)
 	{
-		uint64_t pawns = b.pieces[WHITE_PAWNS];
+		uint64_t pawns = b.whites_turn ? b.pieces[WHITE_PAWNS] : b.pieces[BLACK_PAWNS];
+		Units enemyPieces = b.whites_turn ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
+		uint64_t allPieces = b.pieces[ALL_WHITE_PIECES] | b.pieces[ALL_BLACK_PIECES];
+
+		uint64_t end_row = b.whites_turn ? TOP_ROW : BOTTOM_ROW;
+		uint64_t start_row = b.whites_turn ? ROW_2 : ROW_7;
 
 		while(pawns != 0)
 		{
 			uint64_t pawn = (pawns & (pawns-1)) ^ pawns;
 			pawns &= pawns-1;
 			// for each pawn
-			if((TOP_ROW & pawn) != 0)
+			if((end_row & pawn) != 0)
 			{
 				continue;
 			}
 
-			uint64_t destination;
+			bool startPosition = (pawn & start_row) != 0;
 
-			bool firstPosition = (pawn & 0xFF00) != 0;
-			uint64_t allPieces = b.pieces[ALL_WHITE_PIECES] | b.pieces[ALL_BLACK_PIECES];
+			uint64_t destination = b.whites_turn ? pawn << 8 : pawn >> 8;
 
-			bool oneStepFree = ((pawn << 8) & allPieces) == 0;
+			bool oneStepFree = (destination & allPieces) == 0;
 
 			// One step forward
 			if(oneStepFree)
 			{
-				destination = pawn << 8;
 				add_move(b, pawn, destination);
 			}
 
 			// Two step forward
-			if(oneStepFree && firstPosition)
+			if(oneStepFree && startPosition)
 			{
-				destination = pawn << 16;
+				destination = b.whites_turn ? pawn << 16 : pawn >> 16;
 				bool twoStepFree = (destination & allPieces) == 0;
 				if(twoStepFree)
 				{
@@ -75,8 +78,8 @@ namespace cengine
 			// Attack left
 			if((LEFT_COL & pawn) == 0)
 			{
-				destination = pawn << 9;
-				if((destination & b.pieces[ALL_BLACK_PIECES]) != 0)
+				destination = b.whites_turn ? pawn << 7 : pawn >> 9;
+				if((destination & b.pieces[enemyPieces]) != 0)
 				{
 					add_move(b, pawn, destination);
 				}
@@ -85,8 +88,8 @@ namespace cengine
 			// Attack right
 			if((RIGHT_COL & pawn) == 0)
 			{
-				destination = pawn << 7;
-				if((destination & b.pieces[ALL_BLACK_PIECES]) != 0)
+				destination = b.whites_turn ? pawn << 9 : pawn >> 7;
+				if((destination & b.pieces[enemyPieces]) != 0)
 				{
 					add_move(b, pawn, destination);
 				}
