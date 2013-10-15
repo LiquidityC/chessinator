@@ -30,7 +30,7 @@ namespace cengine {
 
 				Move my_move = algorithm.get_move(board);
 				board.perform_move(my_move);
-				io.send_command(IoCommand(my_move.as_string()));
+				io.send_command(IoCommand("move " + my_move.as_string()));
 			} else {
 				io.send_command(handler.parse_command(c));
 			}

@@ -6,12 +6,14 @@
 
 namespace cengine
 {
+	class Move;
+
 	class Algorithm
 	{
 		private:
-			MoveGenerator m_generator;
 
 			int alphabeta(const Board&, unsigned int, int, int, bool);
+
 		public:
 
 			Move get_move(const Board&);

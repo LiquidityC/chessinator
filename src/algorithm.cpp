@@ -11,21 +11,29 @@ namespace cengine
 
 	Move Algorithm::get_move(const Board& board)
 	{
-		m_generator.calculate_moves_for(board);
+		MoveGenerator mgen;
+
+		mgen.calculate_moves_for(board);
 		int max = -INT_MAX;
 		Move* best_move = NULL;
 
-		for (auto it = m_generator.begin(); it != m_generator.end(); it++) {
+		for (auto it = mgen.begin(); it != mgen.end(); it++) {
 			int value = alphabeta(*it, 1, -INT_MAX, INT_MAX, false);
 			if(max < value) {
 				max = value;
+
 				if(best_move != NULL) {
 					delete best_move;
 				}
 				best_move = new Move((*it).get_last_move());
 			}
 		}
-		return *best_move;
+
+		// Delete the pointer and return the result
+		Move result(*best_move);
+		delete best_move;
+
+		return result;
 	}
 
 
@@ -35,10 +43,11 @@ namespace cengine
 			return Evaluator::evaluate(board);
 		}
 
-		m_generator.calculate_moves_for(board);
+		MoveGenerator mgen;
+		mgen.calculate_moves_for(board);
 
 		if (maxPlayer) {
-			for (auto it = m_generator.begin(); it != m_generator.end(); it++) {
+			for (auto it = mgen.begin(); it != mgen.end(); it++) {
 				a = std::max(a, alphabeta(*it, depth - 1, a, b, false));
 				if (a <= b) {
 					break;
@@ -46,7 +55,7 @@ namespace cengine
 			}
 			return a;
 		} else {
-			for (auto it = m_generator.begin(); it != m_generator.end(); it++) {
+			for (auto it = mgen.begin(); it != mgen.end(); it++) {
 				b = std::min(b, alphabeta(*it, depth - 1, a, b, false));
 				if (b <= a) {
 					break;

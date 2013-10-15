@@ -272,9 +272,6 @@ namespace cengine
 		from = m.get_from_bit();
 		to = m.get_to_bit();
 
-		std::cout << std::hex << from << std::endl;
-		std::cout << std::hex << pieces[WHITE_PAWNS] << std::endl;
-
 		Unit mover = get_target_for_move(from);
 		Unit target = get_target_for_move(to);
 
