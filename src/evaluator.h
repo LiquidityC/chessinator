@@ -9,6 +9,9 @@ namespace cengine
 	{
 		public:
 			static int evaluate(const Board&);
+
+		private:
+			static int count_pieces(const Board& b, Unit);
 	};
 }
 
