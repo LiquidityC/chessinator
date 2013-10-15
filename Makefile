@@ -38,6 +38,9 @@ $(EXECUTABLE): $(PROG_OBJECTS) $(DEPS)
 check: $(TEST)
 	./$(TEST)
 
+run: $(EXECUTABLE)
+	./run.sh
+
 $(TEST): $(TEST_OBJECTS) $(DEPS)
 	$(LD) $(LDFLAGS) -lcppunit $(LIBS) -o $@ $(TEST_OBJECTS)
 

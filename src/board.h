@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include "move.h"
 
 namespace cengine
 {
@@ -66,6 +67,8 @@ namespace cengine
 			bool is_white_short_castling_available() const { return white_short_castling_available; }
 			bool is_black_long_castling_available() const { return black_long_castling_available; }
 			bool is_black_short_castling_available() const { return black_short_castling_available; }
+
+			Move get_last_move() const { return *last_move; }
 
 			void perform_move(const Move&);
 

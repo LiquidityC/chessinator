@@ -10,10 +10,11 @@ namespace cengine
 	{
 		private:
 			MoveGenerator m_generator;
-			MoveGenerator::iterator it;
 
-		public:
 			int alphabeta(const Board&, unsigned int, int, int, bool);
+		public:
+
+			Move get_move(const Board&);
 	};
 }
 

@@ -381,7 +381,7 @@ namespace cengine
 
 	void MoveGenerator::add_move(const Board& board, uint64_t from, uint64_t to)
 	{
-		Board new_board = board;
+		Board new_board(board);
 		Move m(from, to);
 
 		new_board.perform_move(m);

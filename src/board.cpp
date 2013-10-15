@@ -1,5 +1,6 @@
 #include <cassert>
 #include <fstream>
+#include <iostream>
 
 #include "board.h"
 #include "move.h"
@@ -238,6 +239,10 @@ namespace cengine
 		}
 
 		whites_turn = !whites_turn;
+		if(last_move != NULL) {
+			delete last_move;
+		}
+		last_move = new Move(m);
 	}
 
 	void Board::perform_castling_move(const Move& m)
@@ -266,6 +271,9 @@ namespace cengine
 
 		from = m.get_from_bit();
 		to = m.get_to_bit();
+
+		std::cout << std::hex << from << std::endl;
+		std::cout << std::hex << pieces[WHITE_PAWNS] << std::endl;
 
 		Unit mover = get_target_for_move(from);
 		Unit target = get_target_for_move(to);

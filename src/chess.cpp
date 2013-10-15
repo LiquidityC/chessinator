@@ -6,6 +6,7 @@
 #include "iocommand.h"
 #include "commandhandler.h"
 #include "board.h"
+#include "algorithm.h"
 
 namespace cengine {
 
@@ -13,11 +14,11 @@ namespace cengine {
 	{
 		IoCommunicator io;
 		CommandHandler handler;
-		Board b;
+		Board board;
+		Algorithm algorithm;
 
 		while (true) {
 			IoCommand c = io.read_command();
-			IoCommand response;
 
 			if (c.as_string() == "quit") {
 				break;
@@ -25,12 +26,14 @@ namespace cengine {
 
 			if (c.is_move()) {
 				Move m = c.get_move();
-				b.perform_move(m);
-			} else {
-				response = handler.parse_command(c);
-			}
+				board.perform_move(m);
 
-			io.send_command(response);
+				Move my_move = algorithm.get_move(board);
+				board.perform_move(my_move);
+				io.send_command(IoCommand(my_move.as_string()));
+			} else {
+				io.send_command(handler.parse_command(c));
+			}
 		}
 
 		return 0;
