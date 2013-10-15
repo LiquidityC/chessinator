@@ -96,7 +96,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_rook_moves_for(const Board& b)
 	{
-		uint64_t rooks = b.pieces[WHITE_ROOKS];
+		uint64_t rooks = b.whites_turn ? b.pieces[WHITE_ROOKS] : b.pieces[BLACK_ROOKS];
 
 		while(rooks != 0)
 		{
@@ -169,7 +169,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_bishop_moves_for(const Board& b)
 	{
-		uint64_t bishops = b.pieces[WHITE_BISHOPS];
+		uint64_t bishops = b.whites_turn ? b.pieces[WHITE_BISHOPS] : b.pieces[BLACK_BISHOPS];
 
 		while(bishops != 0)
 		{
@@ -185,7 +185,7 @@ namespace cengine
 
 	void MoveGenerator::calculate_queen_moves_for(const Board& b)
 	{
-		uint64_t queens = b.pieces[WHITE_QUEEN];
+		uint64_t queens = b.whites_turn ? b.pieces[WHITE_QUEEN] : b.pieces[BLACK_QUEEN];
 
 		while(queens != 0)
 		{
@@ -289,8 +289,8 @@ namespace cengine
 	void MoveGenerator::calculate_direction_moves(const Board& board, const uint64_t piece, const Direction direction)
 	{
 		uint64_t position = piece;
-		Units enemyPieces = ALL_BLACK_PIECES;
-		Units friendPieces = ALL_WHITE_PIECES;
+		Units enemyPieces = board.whites_turn ? ALL_BLACK_PIECES : ALL_WHITE_PIECES;
+		Units friendPieces = board.whites_turn ? ALL_WHITE_PIECES : ALL_BLACK_PIECES;
 
 		uint64_t endSquares;
 
