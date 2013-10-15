@@ -115,8 +115,10 @@ namespace cengine
 
 	void MoveGenerator::calculate_knight_moves_for(const Board& b)
 	{
+		Units friendly_pieces = ALL_WHITE_PIECES;
 		uint64_t knights = b.pieces[WHITE_KNIGHTS];
 		if (!b.whites_turn) {
+			friendly_pieces = ALL_BLACK_PIECES;
 			knights = b.pieces[BLACK_KNIGHTS];
 		}
 
@@ -136,34 +138,34 @@ namespace cengine
 			bool on_right_col = (knight & RIGHT_COL) != 0;
 
 			if ( !on_left_col ) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<15) == 0 && (!on_top_row && !on_row_7)) {
+				if ((b.pieces[friendly_pieces] & knight<<15) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<15);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>17) == 0 && (!on_bottom_row && !on_row_2)) {
+				if ((b.pieces[friendly_pieces] & knight>>17) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>17);
 				}
 			}
 			if ( !on_left_col && !on_col_b ) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<6) == 0 && !on_top_row) {
+				if ((b.pieces[friendly_pieces] & knight<<6) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<6);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>10) == 0 && !on_bottom_row) {
+				if ((b.pieces[friendly_pieces] & knight>>10) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>10);
 				}
 			}
 			if ( !on_right_col ) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<17) == 0 && (!on_top_row && !on_row_7)) {
+				if ((b.pieces[friendly_pieces] & knight<<17) == 0 && (!on_top_row && !on_row_7)) {
 					add_move(b, knight, knight<<17);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>15) == 0 && (!on_bottom_row && !on_row_2)) {
+				if ((b.pieces[friendly_pieces] & knight>>15) == 0 && (!on_bottom_row && !on_row_2)) {
 					add_move(b, knight, knight>>15);
 				}
 			}
 			if ( !on_right_col && !on_col_g ) {
-				if ((b.pieces[ALL_WHITE_PIECES] & knight<<10) == 0 && !on_top_row) {
+				if ((b.pieces[friendly_pieces] & knight<<10) == 0 && !on_top_row) {
 					add_move(b, knight, knight<<10);
 				}
-				if ((b.pieces[ALL_WHITE_PIECES] & knight>>6) == 0 && !on_bottom_row) {
+				if ((b.pieces[friendly_pieces] & knight>>6) == 0 && !on_bottom_row) {
 					add_move(b, knight, knight>>6);
 				}
 			}
