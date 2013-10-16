@@ -30,10 +30,18 @@ namespace cengine
 
 		bool whites_turn = b.is_whites_turn();
 
-		if (whites_turn && max_player) {
-			return white_score - black_score;
+		if(whites_turn) {
+			if(max_player) {
+				return white_score - black_score;
+			} else {
+				return black_score - white_score;
+			}
 		} else {
-			return black_score - white_score;
+			if(max_player) {
+				return black_score - white_score;
+			} else {
+				return white_score - black_score;
+			}
 		}
 	}
 
