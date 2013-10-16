@@ -20,6 +20,10 @@ namespace cengine
 		white_score += QUEEN_VALUE * count_pieces(b, WHITE_QUEEN);
 		white_score += KING_VALUE;
 
+		if(count_pieces(b, WHITE_BISHOPS) > 1) {
+			white_score += 50;
+		}
+
 		int black_score = 0;
 		black_score += PAWN_VALUE * count_pieces(b, BLACK_PAWNS);
 		black_score += KNIGHT_VALUE * count_pieces(b, BLACK_KNIGHTS);
@@ -27,6 +31,10 @@ namespace cengine
 		black_score += ROOK_VALUE * count_pieces(b, BLACK_ROOKS);
 		black_score += QUEEN_VALUE * count_pieces(b, BLACK_QUEEN);
 		black_score += KING_VALUE;
+
+		if(count_pieces(b, BLACK_BISHOPS) > 1) {
+			black_score += 50;
+		}
 
 		bool whites_turn = b.is_whites_turn();
 

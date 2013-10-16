@@ -65,133 +65,6 @@ namespace cengine
 		}
 	}
 
-	Board::Board(std::ifstream& input)
-	{
-		pieces[WHITE_PAWNS] 	= 0x0;
-		pieces[WHITE_ROOKS] 	= 0x0;
-		pieces[WHITE_KNIGHTS]	= 0x0;
-		pieces[WHITE_BISHOPS]	= 0x0;
-		pieces[WHITE_QUEEN]		= 0x0;
-		pieces[WHITE_KING]		= 0x0;
-		pieces[BLACK_PAWNS] 	= 0x0;
-		pieces[BLACK_ROOKS] 	= 0x0;
-		pieces[BLACK_KNIGHTS]	= 0x0;
-		pieces[BLACK_BISHOPS]	= 0x0;
-		pieces[BLACK_QUEEN]		= 0x0;
-		pieces[BLACK_KING]		= 0x0;
-
-		char square;
-		uint64_t squareBit = 0x100000000000000;
-		int unit_count = 0;
-		int i = 0;
-
-		while(input.good() && i < 64)
-		{
-			input >> square;
-
-			Unit unit;
-
-			switch(square)
-			{
-				case 'r':
-					unit = WHITE_ROOKS;
-					break;
-				case 'n':
-					unit = WHITE_KNIGHTS;
-					break;
-				case 'b':
-					unit = WHITE_BISHOPS;
-					break;
-				case 'q':
-					unit = WHITE_QUEEN;
-					break;
-				case 'k':
-					unit = WHITE_KING;
-					break;
-				case 'p':
-					unit = WHITE_PAWNS;
-					break;
-				case 'R':
-					unit = BLACK_ROOKS;
-					break;
-				case 'N':
-					unit = BLACK_KNIGHTS;
-					break;
-				case 'B':
-					unit = BLACK_BISHOPS;
-					break;
-				case 'Q':
-					unit = BLACK_QUEEN;
-					break;
-				case 'K':
-					unit = BLACK_KING;
-					break;
-				case 'P':
-					unit = BLACK_PAWNS;
-					break;
-				default:
-					unit = PIECES_SIZE;
-					break;
-			}
-
-			if(unit != PIECES_SIZE) {
-				unit_count++;
-				pieces[unit] |= squareBit;
-			}
-
-			i++;
-			if(i % 8 == 0) {
-				squareBit >>= 15;
-			} else {
-				squareBit <<= 1;
-			}
-		}
-
-		pieces[ALL_WHITE_PIECES] = 0x0;
-		pieces[ALL_BLACK_PIECES] = 0x0;
-
-		for (int i = WHITE_PAWNS; i <= WHITE_KING; i++) {
-			pieces[ALL_WHITE_PIECES] |= pieces[i];
-		}
-		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
-			pieces[ALL_BLACK_PIECES] |= pieces[i];
-		}
-
-		piece_taken = unit_count < 32;
-
-		uint64_t blackKingStart = 0x1000000000000000;
-		uint64_t blackRookLeftStart = 0x100000000000000;
-		uint64_t blackRookRightStart = 0x8000000000000000;
-		uint64_t whiteKingStart = 0x10;
-		uint64_t whiteRookLeftStart = 0x1;
-		uint64_t whiteRookRightStart = 0x80;
-		black_long_castling_available = false;
-		black_short_castling_available = false;
-		white_long_castling_available = false;
-		white_short_castling_available = false;
-
-		if((pieces[BLACK_KING] & blackKingStart) != 0) {
-			if((pieces[BLACK_ROOKS] & blackRookLeftStart) != 0) {
-				black_long_castling_available = true;
-			}
-			if((pieces[BLACK_ROOKS] & blackRookRightStart) != 0) {
-				black_short_castling_available = true;
-			}
-		}
-
-		if((pieces[WHITE_KING] & whiteKingStart) != 0) {
-			if((pieces[WHITE_ROOKS] & whiteRookLeftStart) != 0) {
-				white_long_castling_available = true;
-			}
-			if((pieces[WHITE_ROOKS] & whiteRookRightStart) != 0) {
-				white_short_castling_available = true;
-			}
-		}
-
-		whites_turn = true;
-		last_move = NULL;
-	}
-
 	Board::~Board()
 	{
 		if (last_move != NULL) {
@@ -347,56 +220,188 @@ namespace cengine
 		return PIECES_SIZE;
 	}
 
-}
-
-std::ostream& operator<<(std::ostream& out, const cengine::Board& board)
-{
-	uint64_t squareBit = 0x100000000000000;
-
-	for(int i = 1; i <= 64; i++)
+	std::ostream& operator<<(std::ostream& out, const cengine::Board& board)
 	{
-		if((board.get_pieces_for(cengine::ALL_BLACK_PIECES) & squareBit) != 0)
+		using namespace cengine;
+
+		uint64_t squareBit = 0x100000000000000;
+
+		for(int i = 1; i <= 64; i++)
 		{
-			if((board.get_pieces_for(cengine::BLACK_PAWNS) & squareBit) != 0)
-				out << "P";
-			if((board.get_pieces_for(cengine::BLACK_ROOKS) & squareBit) != 0)
-				out << "R";
-			if((board.get_pieces_for(cengine::BLACK_KNIGHTS) & squareBit) != 0)
-				out << "N";
-			if((board.get_pieces_for(cengine::BLACK_BISHOPS) & squareBit) != 0)
-				out << "B";
-			if((board.get_pieces_for(cengine::BLACK_QUEEN) & squareBit) != 0)
-				out << "Q";
-			if((board.get_pieces_for(cengine::BLACK_KING) & squareBit) != 0)
-				out << "K";
+			if((board.get_pieces_for(ALL_BLACK_PIECES) & squareBit) != 0)
+			{
+				if((board.get_pieces_for(BLACK_PAWNS) & squareBit) != 0)
+					out << "P";
+				if((board.get_pieces_for(BLACK_ROOKS) & squareBit) != 0)
+					out << "R";
+				if((board.get_pieces_for(BLACK_KNIGHTS) & squareBit) != 0)
+					out << "N";
+				if((board.get_pieces_for(BLACK_BISHOPS) & squareBit) != 0)
+					out << "B";
+				if((board.get_pieces_for(BLACK_QUEEN) & squareBit) != 0)
+					out << "Q";
+				if((board.get_pieces_for(BLACK_KING) & squareBit) != 0)
+					out << "K";
+			}
+			else if((board.get_pieces_for(ALL_WHITE_PIECES) & squareBit) != 0)
+			{
+				if((board.get_pieces_for(WHITE_PAWNS) & squareBit) != 0)
+					out << "p";
+				if((board.get_pieces_for(WHITE_ROOKS) & squareBit) != 0)
+					out << "r";
+				if((board.get_pieces_for(WHITE_KNIGHTS) & squareBit) != 0)
+					out << "n";
+				if((board.get_pieces_for(WHITE_BISHOPS) & squareBit) != 0)
+					out << "b";
+				if((board.get_pieces_for(WHITE_QUEEN) & squareBit) != 0)
+					out << "q";
+				if((board.get_pieces_for(WHITE_KING) & squareBit) != 0)
+					out << "k";
+			}
+			else
+			{
+				out << ".";
+			}
+			if(i % 8 == 0) {
+				squareBit >>= 16;
+				out << std::endl;
+			} else {
+				squareBit <<= 1;
+				out << " ";
+			}
 		}
-		else if((board.get_pieces_for(cengine::ALL_WHITE_PIECES) & squareBit) != 0)
-		{
-			if((board.get_pieces_for(cengine::WHITE_PAWNS) & squareBit) != 0)
-				out << "p";
-			if((board.get_pieces_for(cengine::WHITE_ROOKS) & squareBit) != 0)
-				out << "r";
-			if((board.get_pieces_for(cengine::WHITE_KNIGHTS) & squareBit) != 0)
-				out << "n";
-			if((board.get_pieces_for(cengine::WHITE_BISHOPS) & squareBit) != 0)
-				out << "b";
-			if((board.get_pieces_for(cengine::WHITE_QUEEN) & squareBit) != 0)
-				out << "q";
-			if((board.get_pieces_for(cengine::WHITE_KING) & squareBit) != 0)
-				out << "k";
-		}
-		else
-		{
-			out << ".";
-		}
-		if(i % 8 == 0) {
-			squareBit >>= 16;
-			out << std::endl;
-		} else {
-			squareBit <<= 1;
-			out << " ";
-		}
+
+		return out;
 	}
 
-	return out;
+	std::istream& operator>>(std::istream& input, cengine::Board& b)
+	{
+		using namespace cengine;
+
+		b.pieces[WHITE_PAWNS] 	= 0x0;
+		b.pieces[WHITE_ROOKS] 	= 0x0;
+		b.pieces[WHITE_KNIGHTS]	= 0x0;
+		b.pieces[WHITE_BISHOPS]	= 0x0;
+		b.pieces[WHITE_QUEEN]		= 0x0;
+		b.pieces[WHITE_KING]		= 0x0;
+		b.pieces[BLACK_PAWNS] 	= 0x0;
+		b.pieces[BLACK_ROOKS] 	= 0x0;
+		b.pieces[BLACK_KNIGHTS]	= 0x0;
+		b.pieces[BLACK_BISHOPS]	= 0x0;
+		b.pieces[BLACK_QUEEN]		= 0x0;
+		b.pieces[BLACK_KING]		= 0x0;
+
+		char square;
+		uint64_t squareBit = 0x100000000000000;
+		int unit_count = 0;
+		int i = 0;
+
+		while(input.good() && i < 64)
+		{
+			input >> square;
+
+			Unit unit;
+
+			switch(square)
+			{
+				case 'r':
+					unit = WHITE_ROOKS;
+					break;
+				case 'n':
+					unit = WHITE_KNIGHTS;
+					break;
+				case 'b':
+					unit = WHITE_BISHOPS;
+					break;
+				case 'q':
+					unit = WHITE_QUEEN;
+					break;
+				case 'k':
+					unit = WHITE_KING;
+					break;
+				case 'p':
+					unit = WHITE_PAWNS;
+					break;
+				case 'R':
+					unit = BLACK_ROOKS;
+					break;
+				case 'N':
+					unit = BLACK_KNIGHTS;
+					break;
+				case 'B':
+					unit = BLACK_BISHOPS;
+					break;
+				case 'Q':
+					unit = BLACK_QUEEN;
+					break;
+				case 'K':
+					unit = BLACK_KING;
+					break;
+				case 'P':
+					unit = BLACK_PAWNS;
+					break;
+				default:
+					unit = PIECES_SIZE;
+					break;
+			}
+
+			if(unit != PIECES_SIZE) {
+				unit_count++;
+				b.pieces[unit] |= squareBit;
+			}
+
+			i++;
+			if(i % 8 == 0) {
+				squareBit >>= 15;
+			} else {
+				squareBit <<= 1;
+			}
+		}
+
+		b.pieces[ALL_WHITE_PIECES] = 0x0;
+		b.pieces[ALL_BLACK_PIECES] = 0x0;
+
+		for (int i = WHITE_PAWNS; i <= WHITE_KING; i++) {
+			b.pieces[ALL_WHITE_PIECES] |= b.pieces[i];
+		}
+		for (int i = BLACK_PAWNS; i <= BLACK_KING; i++) {
+			b.pieces[ALL_BLACK_PIECES] |= b.pieces[i];
+		}
+
+		b.piece_taken = unit_count < 32;
+
+		uint64_t blackKingStart = 0x1000000000000000;
+		uint64_t blackRookLeftStart = 0x100000000000000;
+		uint64_t blackRookRightStart = 0x8000000000000000;
+		uint64_t whiteKingStart = 0x10;
+		uint64_t whiteRookLeftStart = 0x1;
+		uint64_t whiteRookRightStart = 0x80;
+		b.black_long_castling_available = false;
+		b.black_short_castling_available = false;
+		b.white_long_castling_available = false;
+		b.white_short_castling_available = false;
+
+		if((b.pieces[BLACK_KING] & blackKingStart) != 0) {
+			if((b.pieces[BLACK_ROOKS] & blackRookLeftStart) != 0) {
+				b.black_long_castling_available = true;
+			}
+			if((b.pieces[BLACK_ROOKS] & blackRookRightStart) != 0) {
+				b.black_short_castling_available = true;
+			}
+		}
+
+		if((b.pieces[WHITE_KING] & whiteKingStart) != 0) {
+			if((b.pieces[WHITE_ROOKS] & whiteRookLeftStart) != 0) {
+				b.white_long_castling_available = true;
+			}
+			if((b.pieces[WHITE_ROOKS] & whiteRookRightStart) != 0) {
+				b.white_short_castling_available = true;
+			}
+		}
+
+		b.whites_turn = true;
+		b.last_move = NULL;
+
+		return input;
+	}
 }

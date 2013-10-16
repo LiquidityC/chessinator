@@ -51,8 +51,6 @@ namespace cengine
 
 			Board(const Board&);
 
-			Board(std::ifstream&);
-
 			~Board();
 
 			Board& operator=(const Board&);
@@ -73,6 +71,8 @@ namespace cengine
 			void perform_move(const Move&);
 
 			friend std::ostream& operator<<(std::ostream&, const Board&);
+
+			friend std::istream& operator>>(std::istream&, Board&);
 	};
 }
 

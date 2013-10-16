@@ -26,7 +26,8 @@ int MoveGeneratorTest::test_board(std::string filename, bool whites_turn)
 	file.open(filename);
 
 	cengine::MoveGenerator generator;
-	cengine::Board board(file);
+	cengine::Board board;
+	file >> board;
 	file.close();
 
 	board.set_whites_turn(whites_turn);
