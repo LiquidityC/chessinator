@@ -18,7 +18,7 @@ namespace cengine
 		Move* best_move = NULL;
 
 		for (auto it = mgen.begin(); it != mgen.end(); it++) {
-			int value = alphabeta(*it, 2, -INT_MAX, INT_MAX, false);
+			int value = alphabeta(*it, 3, -INT_MAX, INT_MAX, false);
 			if(max < value) {
 				max = value;
 
@@ -37,16 +37,16 @@ namespace cengine
 	}
 
 
-	int Algorithm::alphabeta(const Board& board, unsigned int depth, int a, int b, bool maxPlayer)
+	int Algorithm::alphabeta(const Board& board, unsigned int depth, int a, int b, bool max_player)
 	{
 		if (depth == 0) {
-			return Evaluator::evaluate(board);
+			return Evaluator::evaluate(board, max_player);
 		}
 
 		MoveGenerator mgen;
 		mgen.calculate_moves_for(board);
 
-		if (maxPlayer) {
+		if (max_player) {
 			for (auto it = mgen.begin(); it != mgen.end(); it++) {
 				a = std::max(a, alphabeta(*it, depth - 1, a, b, false));
 				if (a <= b) {

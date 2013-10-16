@@ -10,7 +10,7 @@
 
 namespace cengine
 {
-	int Evaluator::evaluate(const Board& b)
+	int Evaluator::evaluate(const Board& b, bool max_player)
 	{
 		int white_score = 0;
 		white_score += PAWN_VALUE * count_pieces(b, WHITE_PAWNS);
@@ -28,8 +28,13 @@ namespace cengine
 		black_score += QUEEN_VALUE * count_pieces(b, BLACK_QUEEN);
 		black_score += KING_VALUE;
 
-		// Who are we playing?
-		return black_score - white_score;
+		bool whites_turn = b.is_whites_turn();
+
+		if (whites_turn && max_player) {
+			return white_score - black_score;
+		} else {
+			return black_score - white_score;
+		}
 	}
 
 	int Evaluator::count_pieces(const Board& b, Unit u)
