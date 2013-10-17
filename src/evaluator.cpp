@@ -40,7 +40,7 @@ namespace cengine
 
 		bool whites_turn = b.is_whites_turn();
 
-		bool playing_white = whites_turn && max_player;
+		bool playing_white = whites_turn == max_player;
 
 		if(playing_white) {
 			return white_score - black_score;
