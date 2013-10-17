@@ -263,7 +263,7 @@ namespace cengine
 				out << ".";
 			}
 			if(i % 8 == 0) {
-				squareBit >>= 16;
+				squareBit >>= 15;
 				out << std::endl;
 			} else {
 				squareBit <<= 1;
