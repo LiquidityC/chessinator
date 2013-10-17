@@ -18,7 +18,7 @@ namespace cengine
 		Move* best_move = NULL;
 
 		for (auto it = mgen.begin(); it != mgen.end(); it++) {
-			int value = alphabeta(*it, 3, -INT_MAX, INT_MAX, false);
+			int value = alphabeta(*it, 2, -INT_MAX, INT_MAX, false);
 			if(max < value) {
 				max = value;
 
@@ -45,6 +45,10 @@ namespace cengine
 
 		MoveGenerator mgen;
 		mgen.calculate_moves_for(board);
+
+		if (mgen.begin() == mgen.end()) {
+			return Evaluator::evaluate(board, max_player);
+		}
 
 		if (max_player) {
 			for (auto it = mgen.begin(); it != mgen.end(); it++) {

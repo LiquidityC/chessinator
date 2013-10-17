@@ -22,6 +22,12 @@ namespace cengine
 	{
 		possible_moves.clear();
 
+		if (b.get_pieces_for(BLACK_KING) == 0
+				|| b.get_pieces_for(WHITE_KING) == 0)
+		{
+			return;
+		}
+
 		// Fill the local vector
 		calculate_pawn_moves_for(b);
 		calculate_rook_moves_for(b);

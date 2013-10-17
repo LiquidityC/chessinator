@@ -231,16 +231,19 @@ namespace cengine
 			black_long_castling_available = false;
 		}
 
-		uint64_t rook_left_start = 0x1;
-		uint64_t rook_right_start = 0x80;
-		if ( (to & rook_left_start) != 0 ) {
-			white_long_castling_available = false;
-		} else if ( (to & rook_right_start) != 0 ) {
-			white_short_castling_available = false;
-		} else if ( (to & rook_left_start<<56) != 0 ) {
-			black_long_castling_available = false;
-		} else if ( (to & rook_right_start<<56) != 0 ) {
-			black_short_castling_available = false;
+		switch (to) {
+			case static_cast<uint64_t>(0x1):
+				white_long_castling_available = false;
+				break;
+			case static_cast<uint64_t>(0x80):
+				white_short_castling_available = false;
+				break;
+			case static_cast<uint64_t>(0x1)<<56:
+				black_long_castling_available = false;
+				break;
+			case static_cast<uint64_t>(0x80)<<56:
+				black_short_castling_available = false;
+				break;
 		}
 	}
 
