@@ -209,9 +209,10 @@ namespace cengine
 
 	void MoveGenerator::calculate_king_moves_for(const Board& b)
 	{
-		uint64_t king = b.get_pieces_for(WHITE_KING);
-		if (!b.is_whites_turn()) {
-			king = b.get_pieces_for(BLACK_KING);
+		uint64_t king = b.is_whites_turn() ? b.get_pieces_for(WHITE_KING) : b.get_pieces_for(BLACK_KING);
+
+		if(king == 0) {
+			return;
 		}
 
 		bool on_top_row = (king & TOP_ROW) != 0;
@@ -219,36 +220,58 @@ namespace cengine
 		bool on_left_col = (king & LEFT_COL) != 0;
 		bool on_right_col = (king & RIGHT_COL) != 0;
 
-		if (!on_left_col) {
-			if ((king>>1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
-				add_move(b, king, king>>1);
+		uint64_t friend_pieces = b.is_whites_turn() ? b.get_pieces_for(ALL_WHITE_PIECES) : b.get_pieces_for(ALL_BLACK_PIECES);
+
+		uint64_t destination;
+
+		if(!on_left_col) {
+			destination = shift_piece(king, LEFT);
+			if((destination & friend_pieces) == 0 ) {
+				add_move(b, king, destination);
 			}
-			if ((king<<7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<7 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
-				add_move(b, king, king<<7);
+			if(!on_top_row) {
+				destination = shift_piece(king, UP_LEFT);
+				if((destination & friend_pieces) == 0 ) {
+					add_move(b, king, destination);
+				}
 			}
-			if ((king>>9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>9 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
-				add_move(b, king, king<<9);
+			if(!on_bottom_row) {
+				destination = shift_piece(king, DOWN_LEFT);
+				if((destination & friend_pieces) == 0 ) {
+					add_move(b, king, destination);
+				}
 			}
 		}
 		if (!on_right_col) {
-			if ((king<<1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
-				add_move(b, king, king>>1);
+			destination = shift_piece(king, RIGHT);
+			if((destination & friend_pieces) == 0 ) {
+				add_move(b, king, destination);
 			}
-			if ((king<<9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<9 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
-				add_move(b, king, king<<9);
+			if(!on_top_row) {
+				destination = shift_piece(king, UP_RIGHT);
+				if((destination & friend_pieces) == 0 ) {
+					add_move(b, king, destination);
+				}
 			}
-			if ((king>>7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>7 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
-				add_move(b, king, king>>7);
+			if(!on_bottom_row) {
+				destination = shift_piece(king, DOWN_RIGHT);
+				if((destination & friend_pieces) == 0 ) {
+					add_move(b, king, destination);
+				}
 			}
 		}
-		if (!on_top_row) {
-			if ((king<<8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<8 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
-				add_move(b, king, king<<8);
+
+		if(!on_top_row) {
+			destination = shift_piece(king, UP);
+			if((destination & friend_pieces) == 0 ) {
+				add_move(b, king, destination);
 			}
 		}
-		if (!on_bottom_row) {
-			if ((king>>8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>8 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
-				add_move(b, king, king>>8);
+
+		if(!on_bottom_row) {
+			destination = shift_piece(king, DOWN);
+			if((destination & friend_pieces) == 0 ) {
+				add_move(b, king, destination);
 			}
 		}
 	}
@@ -328,7 +351,7 @@ namespace cengine
 
 		while((endSquares & position) == 0)
 		{
-			shift_piece(position, direction);
+			position = shift_piece(position, direction);
 
 			if((position & board.get_pieces_for(enemyPieces)) != 0)
 			{
@@ -343,34 +366,28 @@ namespace cengine
 		}
 	}
 
-	void MoveGenerator::shift_piece(uint64_t& piece, const Direction direction)
+	uint64_t MoveGenerator::shift_piece(const uint64_t piece, const Direction direction)
 	{
 		switch(direction)
 		{
 			case UP:
-				piece <<= 8;
-				break;
+				return piece << 8;
 			case UP_RIGHT:
-				piece <<= 9;
-				break;
+				return piece << 9;
 			case RIGHT:
-				piece <<= 1;
-				break;
+				return piece << 1;
 			case DOWN_RIGHT:
-				piece >>= 7;
-				break;
+				return piece >> 7;
 			case DOWN:
-				piece >>= 8;
-				break;
+				return piece >> 8;
 			case DOWN_LEFT:
-				piece >>= 9;
-				break;
+				return piece >> 9;
 			case LEFT:
-				piece >>= 1;
-				break;
+				return piece >> 1;
 			case UP_LEFT:
-				piece <<= 7;
-				break;
+				return piece << 7;
+			default:
+				return piece;
 		}
 	}
 

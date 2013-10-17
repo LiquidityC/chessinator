@@ -204,14 +204,14 @@ namespace cengine
 			case static_cast<uint64_t>(0x80):
 				white_short_castling_available = false;
 				break;
-			case static_cast<uint64_t>(0x10)<<54:
+			case static_cast<uint64_t>(0x10)<<56:
 				black_short_castling_available = false;
 				black_long_castling_available = false;
 				break;
-			case static_cast<uint64_t>(0x1)<<54:
+			case static_cast<uint64_t>(0x1)<<56:
 				black_long_castling_available = false;
 				break;
-			case static_cast<uint64_t>(0x80)<<54:
+			case static_cast<uint64_t>(0x80)<<56:
 				black_short_castling_available = false;
 				break;
 		}

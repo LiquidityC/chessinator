@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdio>
+#include <cassert>
 
 #include "move.h"
 
@@ -10,12 +11,18 @@ namespace cengine
 	{
 		coordinates_to_bits();
 		check_if_castling();
+
+		assert(from_bit != 0);
+		assert(to_bit != 0);
 	}
 
 	Move::Move(uint64_t f, uint64_t t) : from_bit(f), to_bit(t)
 	{
 		bits_to_coordinates();
 		check_if_castling();
+
+		assert(from_bit != 0);
+		assert(to_bit != 0);
 	}
 
 	void Move::check_if_castling()

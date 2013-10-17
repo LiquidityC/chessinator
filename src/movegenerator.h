@@ -80,7 +80,7 @@ namespace cengine
 			void calculate_castling_moves(const Board&);
 
 			void calculate_direction_moves(const Board&, const uint64_t, const Direction);
-			void shift_piece(uint64_t&, const Direction);
+			uint64_t shift_piece(const uint64_t, const Direction);
 			void add_move(const Board&, uint64_t, uint64_t);
 	};
 }
