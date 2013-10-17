@@ -20,7 +20,7 @@ namespace cengine
 		white_score += BISHOP_VALUE * count_pieces(b, WHITE_BISHOPS);
 		white_score += ROOK_VALUE * count_pieces(b, WHITE_ROOKS);
 		white_score += QUEEN_VALUE * count_pieces(b, WHITE_QUEEN);
-		white_score += KING_VALUE;
+		white_score += KING_VALUE * count_pieces(b, WHITE_KING);
 
 		if(count_pieces(b, WHITE_BISHOPS) > 1) {
 			white_score += 50;
@@ -32,7 +32,7 @@ namespace cengine
 		black_score += BISHOP_VALUE * count_pieces(b, BLACK_BISHOPS);
 		black_score += ROOK_VALUE * count_pieces(b, BLACK_ROOKS);
 		black_score += QUEEN_VALUE * count_pieces(b, BLACK_QUEEN);
-		black_score += KING_VALUE;
+		black_score += KING_VALUE * count_pieces(b, BLACK_KING);
 
 		if(count_pieces(b, BLACK_BISHOPS) > 1) {
 			black_score += 50;
@@ -40,18 +40,12 @@ namespace cengine
 
 		bool whites_turn = b.is_whites_turn();
 
-		if(whites_turn) {
-			if(max_player) {
-				return white_score - black_score;
-			} else {
-				return black_score - white_score;
-			}
+		bool playing_white = whites_turn && max_player;
+
+		if(playing_white) {
+			return white_score - black_score;
 		} else {
-			if(max_player) {
-				return black_score - white_score;
-			} else {
-				return white_score - black_score;
-			}
+			return black_score - white_score;
 		}
 	}
 
