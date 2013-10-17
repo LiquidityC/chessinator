@@ -8,6 +8,8 @@
 #define QUEEN_VALUE		975
 #define KING_VALUE		32767
 
+#define count_bits(pieces) (__builtin_popcount(pieces))
+
 namespace cengine
 {
 	int Evaluator::evaluate(const Board& b, bool max_player)
@@ -55,13 +57,7 @@ namespace cengine
 
 	int Evaluator::count_pieces(const Board& b, Unit u)
 	{
-		int count = 0;
 		uint64_t i = b.get_pieces_for(u);
-		while (i != 0) {
-			i >>= 1;
-			count++;
-		}
-
-		return count;
+		return count_bits(i);
 	}
 }

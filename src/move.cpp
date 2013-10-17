@@ -68,10 +68,9 @@ namespace cengine
 			position++;
 		}
 
-		unsigned int x_coord = position % 8;
+		unsigned int x_coord = (position-1) % 8;
 		unsigned int y_coord = (position - x_coord) / 8;
 
-		x_coord--;
 		y_coord++;
 
 		std::stringstream ss;

@@ -18,7 +18,7 @@ namespace cengine
 		Move* best_move = NULL;
 
 		for (auto it = mgen.begin(); it != mgen.end(); it++) {
-			int value = alphabeta(*it, 2, -INT_MAX, INT_MAX, false);
+			int value = alphabeta(*it, 3, -INT_MAX, INT_MAX, false);
 			if(max < value) {
 				max = value;
 
@@ -49,14 +49,14 @@ namespace cengine
 		if (max_player) {
 			for (auto it = mgen.begin(); it != mgen.end(); it++) {
 				a = std::max(a, alphabeta(*it, depth - 1, a, b, false));
-				if (a <= b) {
+				if (b <= a) {
 					break;
 				}
 			}
 			return a;
 		} else {
 			for (auto it = mgen.begin(); it != mgen.end(); it++) {
-				b = std::min(b, alphabeta(*it, depth - 1, a, b, false));
+				b = std::min(b, alphabeta(*it, depth - 1, a, b, true));
 				if (b <= a) {
 					break;
 				}
