@@ -183,6 +183,14 @@ namespace cengine
 
 	void Board::check_castling_impact(const Move& m)
 	{
+		if (!white_long_castling_available 
+				&& !white_short_castling_available
+				&& !black_long_castling_available
+				&& !black_short_castling_available) 
+		{
+			return;
+		}
+
 		uint64_t from = m.get_from_bit();
 
 		switch (from) {
@@ -206,6 +214,20 @@ namespace cengine
 			case static_cast<uint64_t>(0x80)<<54:
 				black_short_castling_available = false;
 				break;
+		}
+
+		uint64_t to = m.get_to_bit();
+
+		uint64_t rook_left_start = 0x1;
+		uint64_t rook_right_start = 0x80;
+		if ( (to & rook_left_start) != 0 ) {
+			white_long_castling_available = false;
+		} else if ( (to & rook_right_start) != 0 ) {
+			white_short_castling_available = false;
+		} else if ( (to & rook_left_start<<56) != 0 ) {
+			black_long_castling_available = false;
+		} else if ( (to & rook_right_start<<56) != 0 ) {
+			black_short_castling_available = false;
 		}
 	}
 
