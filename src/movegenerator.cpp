@@ -223,31 +223,31 @@ namespace cengine
 			if ((king>>1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
+			if ((king<<7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<7 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
 				add_move(b, king, king<<7);
 			}
-			if ((king>>9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
+			if ((king>>9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>9 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
 				add_move(b, king, king<<9);
 			}
 		}
 		if (!on_right_col) {
-			if ((king<<1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
+			if ((king<<1 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>1);
 			}
-			if ((king<<9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
+			if ((king<<9 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<9 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_top_row) {
 				add_move(b, king, king<<9);
 			}
-			if ((king>>7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
+			if ((king>>7 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>7 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0 && !on_bottom_row) {
 				add_move(b, king, king>>7);
 			}
 		}
 		if (!on_top_row) {
-			if ((king<<8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
+			if ((king<<8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king<<8 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king<<8);
 			}
 		}
 		if (!on_bottom_row) {
-			if ((king>>8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>1 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
+			if ((king>>8 & b.get_pieces_for(ALL_WHITE_PIECES)) == 0 && (king>>8 & b.get_pieces_for(ALL_BLACK_PIECES)) == 0) {
 				add_move(b, king, king>>8);
 			}
 		}
