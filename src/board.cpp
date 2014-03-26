@@ -320,14 +320,14 @@ namespace cengine
 		b.pieces[WHITE_ROOKS] 	= 0x0;
 		b.pieces[WHITE_KNIGHTS]	= 0x0;
 		b.pieces[WHITE_BISHOPS]	= 0x0;
-		b.pieces[WHITE_QUEEN]		= 0x0;
-		b.pieces[WHITE_KING]		= 0x0;
+		b.pieces[WHITE_QUEEN]	= 0x0;
+		b.pieces[WHITE_KING]	= 0x0;
 		b.pieces[BLACK_PAWNS] 	= 0x0;
 		b.pieces[BLACK_ROOKS] 	= 0x0;
 		b.pieces[BLACK_KNIGHTS]	= 0x0;
 		b.pieces[BLACK_BISHOPS]	= 0x0;
-		b.pieces[BLACK_QUEEN]		= 0x0;
-		b.pieces[BLACK_KING]		= 0x0;
+		b.pieces[BLACK_QUEEN]	= 0x0;
+		b.pieces[BLACK_KING]	= 0x0;
 
 		char square;
 		uint64_t squareBit = 0x100000000000000;
