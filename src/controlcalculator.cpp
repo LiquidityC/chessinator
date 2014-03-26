@@ -76,7 +76,58 @@ namespace cengine
 
 	uint64_t ControlCalculator::get_knight_controlzone_for(const Board& board, Color color) const
 	{
-		return 0;
+		uint64_t knights = color == Color::WHITE ? board.get_pieces_for(WHITE_KNIGHTS) : board.get_pieces_for(BLACK_KNIGHTS);
+		uint64_t control = 0;
+
+		while(knights != 0)
+		{
+			uint64_t knight = (knights & (knights-1)) ^ knights;
+			knights &= knights-1;
+
+			bool on_bottom_row = (knight & BOTTOM_ROW) != 0;
+			bool on_row_2 = (knight & ROW_2) != 0;
+			bool on_row_7 = (knight & ROW_7) != 0;
+			bool on_top_row = (knight & TOP_ROW) != 0;
+
+			bool on_left_col = (knight & LEFT_COL) != 0;
+			bool on_col_b = (knight & COL_B) != 0;
+			bool on_col_g = (knight & COL_G) != 0;
+			bool on_right_col = (knight & RIGHT_COL) != 0;
+
+			if ( !on_left_col ) {
+				if (!on_top_row && !on_row_7) {
+					control |= knight << 15;
+				}
+				if (!on_bottom_row && !on_row_2) {
+					control |= knight >> 17;
+				}
+			}
+			if ( !on_left_col && !on_col_b ) {
+				if (!on_top_row) {
+					control |= knight << 6;
+				}
+				if (!on_bottom_row) {
+					control |= knight >> 10;
+				}
+			}
+			if ( !on_right_col ) {
+				if (!on_top_row && !on_row_7) {
+					control |= knight << 17;
+				}
+				if (!on_bottom_row && !on_row_2) {
+					control |= knight >> 15;
+				}
+			}
+			if ( !on_right_col && !on_col_g ) {
+				if (!on_top_row) {
+					control |= knight << 10;
+				}
+				if (!on_bottom_row) {
+					control |= knight >> 6;
+				}
+			}
+		}
+		return control;
 	}
 
 	uint64_t ControlCalculator::get_bishop_controlzone_for(const Board& board, Color color) const
