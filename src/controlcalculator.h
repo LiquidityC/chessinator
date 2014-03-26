@@ -2,6 +2,7 @@
 #define _CONTROL_CALCULATOR_H
 
 #include <cstdint>
+#include "boardutil.h"
 
 namespace cengine
 {
@@ -30,6 +31,8 @@ namespace cengine
 			uint64_t get_bishop_controlzone_for(const Board&, Color) const;
 			uint64_t get_queen_controlzone_for(const Board&, Color) const;
 			uint64_t get_king_controlzone_for(const Board&, Color) const;
+
+			uint64_t calculate_direction_control(const Board&, const uint64_t piece, Direction) const;
 	};
 }
 

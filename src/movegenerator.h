@@ -3,20 +3,10 @@
 
 #include <vector>
 #include "board.h"
+#include "boardutil.h"
 
 namespace cengine
 {
-	enum Direction {
-		UP,
-		UP_RIGHT,
-		RIGHT,
-		DOWN_RIGHT,
-		DOWN,
-		DOWN_LEFT,
-		LEFT,
-		UP_LEFT
-	};
-
 	class MoveGenerator
 	{
 		public: // Subclasses

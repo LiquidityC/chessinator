@@ -9,8 +9,13 @@ CPPUNIT_TEST_SUITE_REGISTRATION( ControlCalculatorTest );
 
 void ControlCalculatorTest::test_pawn_control()
 {
-	CPPUNIT_ASSERT(test_board("res/pawntest.txt", cengine::Color::BLACK) == static_cast<uint64_t>(0x0000FF0000000000));
-	CPPUNIT_ASSERT(test_board("res/pawntest.txt", cengine::Color::WHITE) == static_cast<uint64_t>(0x0000000200FF0000));
+	CPPUNIT_ASSERT(test_board("res/pawntest.txt", cengine::Color::BLACK) == static_cast<uint64_t>(0x3C3CFF0000000000));
+	CPPUNIT_ASSERT(test_board("res/pawntest.txt", cengine::Color::WHITE) == static_cast<uint64_t>(0x0000000200FF3C3C));
+}
+
+void ControlCalculatorTest::test_queen_control()
+{
+	CPPUNIT_ASSERT(test_board("res/testqueen.txt", cengine::Color::WHITE) == static_cast<uint64_t>(0x88492A1CF71F2A4B));
 }
 
 uint64_t ControlCalculatorTest::test_board(std::string filename, cengine::Color color)

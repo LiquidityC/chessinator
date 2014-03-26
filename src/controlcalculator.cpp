@@ -1,5 +1,6 @@
 #include "controlcalculator.h"
 #include "board.h"
+#include "boardutil.h"
 
 namespace cengine
 {
@@ -71,11 +72,111 @@ namespace cengine
 
 	uint64_t ControlCalculator::get_queen_controlzone_for(const Board& board, Color color) const
 	{
-		return 0;
+		uint64_t queens = color == Color::WHITE ? board.get_pieces_for(WHITE_QUEEN) : board.get_pieces_for(BLACK_QUEEN);
+		uint64_t control = 0;
+
+		while (queens != 0) {
+
+			uint64_t queen = (queens & (queens-1)) ^ queens;
+			queens &= queens-1;
+
+			control |= calculate_direction_control(board, queen, Direction::UP);
+			control |= calculate_direction_control(board, queen, Direction::UP_RIGHT);
+			control |= calculate_direction_control(board, queen, Direction::RIGHT);
+			control |= calculate_direction_control(board, queen, Direction::DOWN_RIGHT);
+			control |= calculate_direction_control(board, queen, Direction::DOWN);
+			control |= calculate_direction_control(board, queen, Direction::DOWN_LEFT);
+			control |= calculate_direction_control(board, queen, Direction::LEFT);
+			control |= calculate_direction_control(board, queen, Direction::UP_LEFT);
+		}
+
+		return control;
 	}
 
 	uint64_t ControlCalculator::get_king_controlzone_for(const Board& board, Color color) const
 	{
-		return 0;
+		uint64_t king = color == Color::WHITE ? board.get_pieces_for(WHITE_KING) : board.get_pieces_for(BLACK_KING);
+		uint64_t control = 0;
+
+		if ((king & TOP_ROW) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::UP);
+		}
+		if ((king & TOP_ROW) == 0 && (king & RIGHT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::UP_RIGHT);
+		}
+		if ((king & RIGHT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::RIGHT);
+		}
+		if ((king & BOTTOM_ROW) == 0 && (king & RIGHT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::DOWN_RIGHT);
+		}
+		if ((king & BOTTOM_ROW) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::DOWN);
+		}
+		if ((king & BOTTOM_ROW) == 0 && (king & LEFT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::DOWN_LEFT);
+		}
+		if ((king & LEFT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::LEFT);
+		}
+		if ((king & TOP_ROW) == 0 && (king & LEFT_COL) == 0) {
+			control |= BoardUtil::shift_piece(king, Direction::UP_LEFT);
+		}
+
+		return control;
+	}
+
+	uint64_t ControlCalculator::calculate_direction_control(const Board& board, const uint64_t piece, Direction direction) const
+	{
+		uint64_t position = piece;
+		uint64_t endSquares;
+
+		switch(direction)
+		{
+			case UP:
+				endSquares = TOP_ROW;
+				break;
+			case UP_RIGHT:
+				endSquares = TOP_ROW | RIGHT_COL;
+				break;
+			case RIGHT:
+				endSquares = RIGHT_COL;
+				break;
+			case DOWN_RIGHT:
+				endSquares = RIGHT_COL | BOTTOM_ROW;
+				break;
+			case DOWN:
+				endSquares = BOTTOM_ROW;
+				break;
+			case DOWN_LEFT:
+				endSquares = BOTTOM_ROW | LEFT_COL;
+				break;
+			case LEFT:
+				endSquares = LEFT_COL;
+				break;
+			case UP_LEFT:
+				endSquares = LEFT_COL | TOP_ROW;
+				break;
+		}
+
+		uint64_t all_pieces(0);
+		all_pieces |= board.get_pieces_for(ALL_WHITE_PIECES);
+		all_pieces |= board.get_pieces_for(ALL_BLACK_PIECES);
+
+		uint64_t control(0);
+
+		while((endSquares & position) == 0) {
+			position = BoardUtil::shift_piece(position, direction);
+			control |= position;
+
+			if((position & all_pieces) != 0) {
+				break;
+			}
+		}
+
+		// Add the final square
+		control |= position;
+
+		return control;
 	}
 }

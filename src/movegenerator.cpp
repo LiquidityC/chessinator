@@ -1,6 +1,7 @@
 #include <cstdio>
 
 #include "movegenerator.h"
+#include "boardutil.h"
 #include "move.h"
 
 namespace cengine
@@ -218,36 +219,36 @@ namespace cengine
 		uint64_t destination;
 
 		if(!on_left_col) {
-			destination = shift_piece(king, LEFT);
+			destination = BoardUtil::shift_piece(king, LEFT);
 			if((destination & friend_pieces) == 0 ) {
 				add_move(b, king, destination);
 			}
 			if(!on_top_row) {
-				destination = shift_piece(king, UP_LEFT);
+				destination = BoardUtil::shift_piece(king, UP_LEFT);
 				if((destination & friend_pieces) == 0 ) {
 					add_move(b, king, destination);
 				}
 			}
 			if(!on_bottom_row) {
-				destination = shift_piece(king, DOWN_LEFT);
+				destination = BoardUtil::shift_piece(king, DOWN_LEFT);
 				if((destination & friend_pieces) == 0 ) {
 					add_move(b, king, destination);
 				}
 			}
 		}
 		if (!on_right_col) {
-			destination = shift_piece(king, RIGHT);
+			destination = BoardUtil::shift_piece(king, RIGHT);
 			if((destination & friend_pieces) == 0 ) {
 				add_move(b, king, destination);
 			}
 			if(!on_top_row) {
-				destination = shift_piece(king, UP_RIGHT);
+				destination = BoardUtil::shift_piece(king, UP_RIGHT);
 				if((destination & friend_pieces) == 0 ) {
 					add_move(b, king, destination);
 				}
 			}
 			if(!on_bottom_row) {
-				destination = shift_piece(king, DOWN_RIGHT);
+				destination = BoardUtil::shift_piece(king, DOWN_RIGHT);
 				if((destination & friend_pieces) == 0 ) {
 					add_move(b, king, destination);
 				}
@@ -255,14 +256,14 @@ namespace cengine
 		}
 
 		if(!on_top_row) {
-			destination = shift_piece(king, UP);
+			destination = BoardUtil::shift_piece(king, UP);
 			if((destination & friend_pieces) == 0 ) {
 				add_move(b, king, destination);
 			}
 		}
 
 		if(!on_bottom_row) {
-			destination = shift_piece(king, DOWN);
+			destination = BoardUtil::shift_piece(king, DOWN);
 			if((destination & friend_pieces) == 0 ) {
 				add_move(b, king, destination);
 			}
@@ -344,7 +345,7 @@ namespace cengine
 
 		while((endSquares & position) == 0)
 		{
-			position = shift_piece(position, direction);
+			position = BoardUtil::shift_piece(position, direction);
 
 			if((position & board.get_pieces_for(enemyPieces)) != 0)
 			{
@@ -356,31 +357,6 @@ namespace cengine
 				break;
 			}
 			add_move(board, piece, position);
-		}
-	}
-
-	uint64_t MoveGenerator::shift_piece(const uint64_t piece, const Direction direction)
-	{
-		switch(direction)
-		{
-			case UP:
-				return piece << 8;
-			case UP_RIGHT:
-				return piece << 9;
-			case RIGHT:
-				return piece << 1;
-			case DOWN_RIGHT:
-				return piece >> 7;
-			case DOWN:
-				return piece >> 8;
-			case DOWN_LEFT:
-				return piece >> 9;
-			case LEFT:
-				return piece >> 1;
-			case UP_LEFT:
-				return piece << 7;
-			default:
-				return piece;
 		}
 	}
 
