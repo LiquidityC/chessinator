@@ -57,7 +57,21 @@ namespace cengine
 
 	uint64_t ControlCalculator::get_rook_controlzone_for(const Board& board, Color color) const
 	{
-		return 0;
+		uint64_t rooks = color == Color::WHITE ? board.get_pieces_for(WHITE_ROOKS) : board.get_pieces_for(BLACK_ROOKS);
+		uint64_t control = 0;
+
+		while (rooks != 0) {
+
+			uint64_t rook = (rooks & (rooks-1)) ^ rooks;
+			rooks &= rooks-1;
+
+			control |= calculate_direction_control(board, rook, Direction::UP);
+			control |= calculate_direction_control(board, rook, Direction::DOWN);
+			control |= calculate_direction_control(board, rook, Direction::LEFT);
+			control |= calculate_direction_control(board, rook, Direction::RIGHT);
+		}
+
+		return control;
 	}
 
 	uint64_t ControlCalculator::get_knight_controlzone_for(const Board& board, Color color) const
@@ -67,7 +81,21 @@ namespace cengine
 
 	uint64_t ControlCalculator::get_bishop_controlzone_for(const Board& board, Color color) const
 	{
-		return 0;
+		uint64_t bishops = color == Color::WHITE ? board.get_pieces_for(WHITE_BISHOPS) : board.get_pieces_for(BLACK_BISHOPS);
+		uint64_t control = 0;
+
+		while (bishops != 0) {
+
+			uint64_t bishop = (bishops & (bishops-1)) ^ bishops;
+			bishops &= bishops-1;
+
+			control |= calculate_direction_control(board, bishop, Direction::UP_LEFT);
+			control |= calculate_direction_control(board, bishop, Direction::UP_RIGHT);
+			control |= calculate_direction_control(board, bishop, Direction::DOWN_LEFT);
+			control |= calculate_direction_control(board, bishop, Direction::DOWN_RIGHT);
+		}
+
+		return control;
 	}
 
 	uint64_t ControlCalculator::get_queen_controlzone_for(const Board& board, Color color) const
@@ -164,6 +192,10 @@ namespace cengine
 		all_pieces |= board.get_pieces_for(ALL_BLACK_PIECES);
 
 		uint64_t control(0);
+
+		if ((endSquares & position) != 0) {
+			return control;
+		}
 
 		while((endSquares & position) == 0) {
 			position = BoardUtil::shift_piece(position, direction);
