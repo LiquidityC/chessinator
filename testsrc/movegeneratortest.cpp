@@ -15,8 +15,8 @@ void MoveGeneratorTest::test_move()
 	CPPUNIT_ASSERT(test_board("res/startboard.txt") == 20);
 	CPPUNIT_ASSERT(test_board("res/startboard.txt", false) == 20);
 	CPPUNIT_ASSERT(test_board("res/testcastling.txt") == 26);
-	CPPUNIT_ASSERT(test_board("res/testcastlingblock.txt") == 24);
-	CPPUNIT_ASSERT(test_board("res/testblackpieces.txt", false) == 47);
+	CPPUNIT_ASSERT(test_board("res/testcastlingblock.txt") == 23);
+	CPPUNIT_ASSERT(test_board("res/testblackpieces.txt", false) == 6);
 	CPPUNIT_ASSERT(test_board("res/pawntest.txt", true) == 21);
 }
 

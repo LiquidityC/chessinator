@@ -372,6 +372,15 @@ namespace cengine
 
 		new_board.perform_move(m);
 
-		possible_moves.push_back(new_board);
+		bool moved_into_check = false;
+		if (new_board.is_whites_turn()) {
+			moved_into_check = BoardUtil::is_black_in_check(new_board);
+		} else {
+			moved_into_check = BoardUtil::is_white_in_check(new_board);
+		}
+
+		if (!moved_into_check) {
+			possible_moves.push_back(new_board);
+		}
 	}
 }

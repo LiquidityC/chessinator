@@ -170,7 +170,7 @@ namespace cengine
 
 		// Recalculate the totals
 		// From
-		if ((pieces[ALL_WHITE_PIECES] & from) != 0) {
+		if (whites_turn) {
 			pieces[ALL_WHITE_PIECES] ^= from;
 		} else {
 			pieces[ALL_BLACK_PIECES] ^= from;
@@ -212,31 +212,6 @@ namespace cengine
 			case static_cast<uint64_t>(0x10)<<56:
 				black_short_castling_available = false;
 				black_long_castling_available = false;
-				break;
-			case static_cast<uint64_t>(0x1)<<56:
-				black_long_castling_available = false;
-				break;
-			case static_cast<uint64_t>(0x80)<<56:
-				black_short_castling_available = false;
-				break;
-		}
-
-		uint64_t to = m.get_to_bit();
-
-		if ((to & pieces[WHITE_KING]) != 0) {
-			white_long_castling_available = false;
-			white_short_castling_available = false;
-		} else if ((to & pieces[BLACK_KING]) != 0) {
-			black_short_castling_available = false;
-			black_long_castling_available = false;
-		}
-
-		switch (to) {
-			case static_cast<uint64_t>(0x1):
-				white_long_castling_available = false;
-				break;
-			case static_cast<uint64_t>(0x80):
-				white_short_castling_available = false;
 				break;
 			case static_cast<uint64_t>(0x1)<<56:
 				black_long_castling_available = false;

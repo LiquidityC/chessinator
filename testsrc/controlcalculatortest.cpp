@@ -26,7 +26,7 @@ void ControlCalculatorTest::test_rook_control()
 void ControlCalculatorTest::test_king_control()
 {
 	CPPUNIT_ASSERT(test_board("res/testking.txt", cengine::Color::WHITE) == static_cast<uint64_t>(0x00001C141C000000));
-	CPPUNIT_ASSERT(test_board("res/testking.txt", cengine::Color::BLACK) == static_cast<uint64_t>(0x0000000070507000));
+	CPPUNIT_ASSERT(test_board("res/testking.txt", cengine::Color::BLACK) == static_cast<uint64_t>(0x000000000000C040));
 }
 
 void ControlCalculatorTest::test_bishop_control()
