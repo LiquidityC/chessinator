@@ -279,7 +279,7 @@ namespace cengine
 		bool short_castling_available = b.is_white_short_castling_available();
 
 		uint64_t castle_from = 0x10;
-		uint64_t short_castle_to = 0x80;
+		uint64_t short_castle_to = 0x40;
 		uint64_t long_castle_to = 0x4;
 
 		if (!b.is_whites_turn()) {
