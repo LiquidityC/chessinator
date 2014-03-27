@@ -77,9 +77,9 @@ void BoardTest::test_totals()
 	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_WHITE_PIECES) == 0xFFFF );
 	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_BLACK_PIECES) == static_cast<uint64_t>(0xFFFF)<<48 );
 
-	Move m("d1", "d2"); // White queen takes white pawn
+	Move m("d1", "d7"); // White queen takes black pawn
 	b.perform_move(m);
 
-	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_WHITE_PIECES) == 0xFFF7 );
-	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_BLACK_PIECES) == static_cast<uint64_t>(0xFFFF)<<48 );
+	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_WHITE_PIECES) == 0x800000000FFF7 );
+	CPPUNIT_ASSERT ( b.get_pieces_for(ALL_BLACK_PIECES) == static_cast<uint64_t>(0xFFF7)<<48 );
 }

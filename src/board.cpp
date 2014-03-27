@@ -150,8 +150,14 @@ namespace cengine
 
 		if (mover == PIECES_SIZE) {
 			std::cout << *this << std::endl;
-			std::cout << m.as_string() << std::endl;
-
+			std::cout << "Attempted move: " <<  m.as_string() << std::endl;
+			if (last_move != NULL) {
+				std::cout << "Previous move: " <<  last_move->as_string() << std::endl;
+			}
+			std::cout << "WSC: " << white_short_castling_available << std::endl;
+			std::cout << "WLC: " << white_long_castling_available << std::endl;
+			std::cout << "BSC: " << black_short_castling_available << std::endl;
+			std::cout << "BLC: " << black_long_castling_available << std::endl;
 		}
 		assert ( mover != PIECES_SIZE );
 		assert ( (pieces[mover] & from) != 0 );
@@ -169,6 +175,16 @@ namespace cengine
 		}
 
 		// Recalculate the totals
+
+		// If we took a piece
+		if (piece_taken) {
+			if (whites_turn) {
+				pieces[ALL_BLACK_PIECES] ^= to;
+			} else {
+				pieces[ALL_WHITE_PIECES] ^= to;
+			}
+		}
+
 		// From
 		if (whites_turn) {
 			pieces[ALL_WHITE_PIECES] ^= from;
@@ -239,42 +255,41 @@ namespace cengine
 
 		uint64_t squareBit = 0x100000000000000;
 
-		for(int i = 1; i <= 64; i++)
-		{
-			if((board.get_pieces_for(ALL_BLACK_PIECES) & squareBit) != 0)
-			{
+		for(int i = 1; i <= 64; i++) {
+			if((board.get_pieces_for(ALL_BLACK_PIECES) & squareBit) != 0) {
 				if((board.get_pieces_for(BLACK_PAWNS) & squareBit) != 0)
 					out << "P";
-				if((board.get_pieces_for(BLACK_ROOKS) & squareBit) != 0)
+				else if((board.get_pieces_for(BLACK_ROOKS) & squareBit) != 0)
 					out << "R";
-				if((board.get_pieces_for(BLACK_KNIGHTS) & squareBit) != 0)
+				else if((board.get_pieces_for(BLACK_KNIGHTS) & squareBit) != 0)
 					out << "N";
-				if((board.get_pieces_for(BLACK_BISHOPS) & squareBit) != 0)
+				else if((board.get_pieces_for(BLACK_BISHOPS) & squareBit) != 0)
 					out << "B";
-				if((board.get_pieces_for(BLACK_QUEEN) & squareBit) != 0)
+				else if((board.get_pieces_for(BLACK_QUEEN) & squareBit) != 0)
 					out << "Q";
-				if((board.get_pieces_for(BLACK_KING) & squareBit) != 0)
+				else if((board.get_pieces_for(BLACK_KING) & squareBit) != 0)
 					out << "K";
-			}
-			else if((board.get_pieces_for(ALL_WHITE_PIECES) & squareBit) != 0)
-			{
+				else 
+					out << "M";
+			} else if((board.get_pieces_for(ALL_WHITE_PIECES) & squareBit) != 0) {
 				if((board.get_pieces_for(WHITE_PAWNS) & squareBit) != 0)
 					out << "p";
-				if((board.get_pieces_for(WHITE_ROOKS) & squareBit) != 0)
+				else if((board.get_pieces_for(WHITE_ROOKS) & squareBit) != 0)
 					out << "r";
-				if((board.get_pieces_for(WHITE_KNIGHTS) & squareBit) != 0)
+				else if((board.get_pieces_for(WHITE_KNIGHTS) & squareBit) != 0)
 					out << "n";
-				if((board.get_pieces_for(WHITE_BISHOPS) & squareBit) != 0)
+				else if((board.get_pieces_for(WHITE_BISHOPS) & squareBit) != 0)
 					out << "b";
-				if((board.get_pieces_for(WHITE_QUEEN) & squareBit) != 0)
+				else if((board.get_pieces_for(WHITE_QUEEN) & squareBit) != 0)
 					out << "q";
-				if((board.get_pieces_for(WHITE_KING) & squareBit) != 0)
+				else if((board.get_pieces_for(WHITE_KING) & squareBit) != 0)
 					out << "k";
-			}
-			else
-			{
+				else 
+					out << "m";
+			} else {
 				out << ".";
 			}
+
 			if(i % 8 == 0) {
 				squareBit >>= 15;
 				out << std::endl;
