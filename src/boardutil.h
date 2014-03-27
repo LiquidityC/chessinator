@@ -18,6 +18,8 @@
 
 namespace cengine
 {
+	class Board;
+
 	enum Direction {
 		UP,
 		UP_RIGHT,
@@ -33,6 +35,9 @@ namespace cengine
 	{
 		public:
 			static uint64_t shift_piece(const uint64_t piece, const Direction direction);
+
+			static bool is_white_in_check(const Board&);
+			static bool is_black_in_check(const Board&);
 	};
 }
 

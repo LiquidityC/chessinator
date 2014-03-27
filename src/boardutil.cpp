@@ -1,4 +1,6 @@
+#include "controlcalculator.h"
 #include "boardutil.h"
+#include "board.h"
 
 namespace cengine
 {
@@ -27,4 +29,17 @@ namespace cengine
 		}
 	}
 
+	bool BoardUtil::is_white_in_check(const Board& board)
+	{
+		ControlCalculator cc;
+		uint64_t king = board.get_pieces_for(Unit::WHITE_KING);
+		return (cc.calculate_black_controlzone_for(board) & king) != 0;
+	}
+
+	bool BoardUtil::is_black_in_check(const Board& board)
+	{
+		ControlCalculator cc;
+		uint64_t king = board.get_pieces_for(Unit::BLACK_KING);
+		return (cc.calculate_white_controlzone_for(board) & king) != 0;
+	}
 }

@@ -1,7 +1,6 @@
 #include <cstdio>
 
 #include "movegenerator.h"
-#include "controlcalculator.h"
 #include "boardutil.h"
 #include "move.h"
 
@@ -14,19 +13,6 @@ namespace cengine
 		if (b.get_pieces_for(BLACK_KING) == 0
 				|| b.get_pieces_for(WHITE_KING) == 0)
 		{
-			return;
-		}
-
-		ControlCalculator controlcalc;
-		uint64_t opponenet_control;
-		if (b.is_whites_turn()) {
-			opponenet_control = controlcalc.calculate_black_controlzone_for(b);
-		} else {
-			opponenet_control = controlcalc.calculate_white_controlzone_for(b);
-		}
-
-		uint64_t king = b.is_whites_turn() ? b.get_pieces_for(WHITE_KING) : b.get_pieces_for(BLACK_KING);
-		if ((king & opponenet_control) != 0) {
 			return;
 		}
 
