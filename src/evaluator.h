@@ -8,7 +8,7 @@ namespace cengine
 	class Evaluator
 	{
 		public:
-			static int evaluate(const Board&, bool);
+			static int evaluate(const Board&, bool, bool = false);
 
 		private:
 			static int count_pieces(const Board& b, Unit);
