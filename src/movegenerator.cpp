@@ -282,6 +282,8 @@ namespace cengine
 		uint64_t short_castle_to = 0x40;
 		uint64_t long_castle_to = 0x4;
 
+		uint64_t enemy_control = b.get_black_control();
+
 		if (!b.is_whites_turn()) {
 			long_block <<= 56;
 			short_block <<= 56;
@@ -292,17 +294,25 @@ namespace cengine
 			castle_from <<= 56;
 			long_castle_to <<= 56;
 			short_castle_to <<= 56;
+
+			enemy_control = b.get_white_control();
 		}
 
-		bool black_pieces_blocking_long = (b.get_pieces_for(ALL_BLACK_PIECES) & long_block) != 0;
-		bool black_pieces_blocking_short = (b.get_pieces_for(ALL_BLACK_PIECES) & short_block) != 0;
-		bool white_pieces_blocking_long = (b.get_pieces_for(ALL_WHITE_PIECES) & long_block) != 0;
-		bool white_pieces_blocking_short = (b.get_pieces_for(ALL_WHITE_PIECES) & short_block) != 0;
+		bool short_castling_blocked = 
+			(b.get_pieces_for(ALL_BLACK_PIECES) & short_block) != 0 ||
+			(b.get_pieces_for(ALL_WHITE_PIECES) & short_block) != 0 ||
+			(enemy_control & short_castle_to) != 0;
 
-		if ( !black_pieces_blocking_long && !white_pieces_blocking_long && long_castling_available) {
+		bool long_castling_blocked = 
+			(b.get_pieces_for(ALL_BLACK_PIECES) & long_block) != 0 ||
+			(b.get_pieces_for(ALL_WHITE_PIECES) & long_block) != 0 ||
+			(enemy_control & long_castle_to) != 0;
+
+		if ( !long_castling_blocked && long_castling_available) {
 			add_move(b, castle_from, long_castle_to);
 		}
-		if ( !black_pieces_blocking_short && !white_pieces_blocking_short && short_castling_available) {
+
+		if ( !short_castling_blocked && short_castling_available) {
 			add_move(b, castle_from, short_castle_to);
 		}
 	}
