@@ -251,6 +251,7 @@ namespace cengine
 		}
 
 		check_castling_impact(m);
+		check_pawn_promotion();
 		update_board_control();
 	}
 
@@ -306,6 +307,29 @@ namespace cengine
 	bool Board::is_black_in_check() const
 	{
 		return (white_control & get_pieces_for(BLACK_KING)) != 0;
+	}
+
+	void Board::check_pawn_promotion()
+	{
+		// White pawns
+		uint64_t pawns_to_promote = get_pieces_for(WHITE_PAWNS) & TOP_ROW;
+		while (pawns_to_promote != 0) {
+			uint64_t pawn = (pawns_to_promote & (pawns_to_promote-1)) ^ pawns_to_promote;
+			pawns_to_promote &= pawns_to_promote-1;
+
+			pieces[WHITE_PAWNS] ^= pawn;
+			pieces[WHITE_QUEEN] |= pawn;
+		}
+
+		// Black pawns
+		pawns_to_promote = get_pieces_for(BLACK_PAWNS) & BOTTOM_ROW;
+		while (pawns_to_promote != 0) {
+			uint64_t pawn = (pawns_to_promote & (pawns_to_promote-1)) ^ pawns_to_promote;
+			pawns_to_promote &= pawns_to_promote-1;
+
+			pieces[BLACK_PAWNS] ^= pawn;
+			pieces[BLACK_QUEEN] |= pawn;
+		}
 	}
 
 	Unit Board::get_target_for_move(uint64_t move) const

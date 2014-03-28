@@ -2,6 +2,7 @@
 #define _BOARD_TEST_H
 
 #include "genericfixture.h"
+#include "../src/board.h"
 
 class BoardTest : public GenericFixture
 {
@@ -12,7 +13,12 @@ class BoardTest : public GenericFixture
 		CPPUNIT_TEST( test_castling_move );
 		CPPUNIT_TEST( test_take );
 		CPPUNIT_TEST( test_totals );
+		CPPUNIT_TEST( test_pawn_promotion );
 		CPPUNIT_TEST_SUITE_END();
+
+	private:
+
+		cengine::Board load_board(std::string);
 
 	public:
 
@@ -20,6 +26,7 @@ class BoardTest : public GenericFixture
 		void test_castling_move();
 		void test_take();
 		void test_totals();
+		void test_pawn_promotion();
 };
 
 #endif

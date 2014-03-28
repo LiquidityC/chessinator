@@ -90,6 +90,8 @@ namespace cengine
 			bool is_white_in_check() const;
 			bool is_black_in_check() const;
 
+			void check_pawn_promotion();
+
 			friend std::ostream& operator<<(std::ostream&, const Board&);
 
 			friend std::istream& operator>>(std::istream&, Board&);
