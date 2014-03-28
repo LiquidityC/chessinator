@@ -40,11 +40,15 @@ namespace cengine
 
 			std::vector<Board> possible_moves;
 
+			bool attack_only;
+
 		public: // Methods
 
 			void calculate_moves_for(const Board&);
 
 			std::size_t move_count();
+
+			void set_attack_only(bool attack_only) { this->attack_only = attack_only; }
 
 			iterator begin() { return iterator(possible_moves.begin()); }
 			iterator end() { return iterator(possible_moves.end()); }

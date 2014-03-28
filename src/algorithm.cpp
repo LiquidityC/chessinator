@@ -36,11 +36,14 @@ namespace cengine
 		return result;
 	}
 
-
 	int Algorithm::alphabeta(const Board& board, unsigned int depth, int a, int b, bool max_player)
 	{
 		if (depth == 0) {
-			return Evaluator::evaluate(board, max_player);
+			if(board.is_piece_taken()) {
+				return quiescenceSearch(board, 3, a, b, max_player);
+			} else {
+				return Evaluator::evaluate(board, max_player);
+			}
 		}
 
 		MoveGenerator mgen;
@@ -61,6 +64,39 @@ namespace cengine
 		} else {
 			for (auto it = mgen.begin(); it != mgen.end(); it++) {
 				b = std::min(b, alphabeta(*it, depth - 1, a, b, true));
+				if (b <= a) {
+					break;
+				}
+			}
+			return b;
+		}
+	}
+
+	int Algorithm::quiescenceSearch(const Board& board, unsigned int depth, int a, int b, bool max_player)
+	{
+		if(depth == 0) {
+			return Evaluator::evaluate(board, max_player);
+		}
+
+		MoveGenerator mgen;
+		mgen.set_attack_only(true);
+		mgen.calculate_moves_for(board);
+
+		if (mgen.begin() == mgen.end()) {
+			return Evaluator::evaluate(board, max_player);
+		}
+
+		if (max_player) {
+			for (auto it = mgen.begin(); it != mgen.end(); it++) {
+				a = std::max(a, quiescenceSearch(*it, depth - 1, a, b, false));
+				if (b <= a) {
+					break;
+				}
+			}
+			return a;
+		} else {
+			for (auto it = mgen.begin(); it != mgen.end(); it++) {
+				b = std::min(b, quiescenceSearch(*it, depth - 1, a, b, true));
 				if (b <= a) {
 					break;
 				}

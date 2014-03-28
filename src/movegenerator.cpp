@@ -379,7 +379,7 @@ namespace cengine
 			moved_into_check = new_board.is_white_in_check();
 		}
 
-		if (!moved_into_check) {
+		if(!moved_into_check && ( !attack_only || new_board.is_piece_taken())) {
 			possible_moves.push_back(new_board);
 		}
 	}

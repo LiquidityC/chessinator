@@ -14,6 +14,8 @@ namespace cengine
 
 			int alphabeta(const Board&, unsigned int, int, int, bool);
 
+			int quiescenceSearch(const Board&, unsigned int, int, int, bool);
+
 		public:
 
 			Move get_move(const Board&);
