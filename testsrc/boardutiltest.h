@@ -14,12 +14,11 @@ class BoardUtilTest : public GenericFixture
 	public:
 
 		CPPUNIT_TEST_SUITE( BoardUtilTest );
-		CPPUNIT_TEST( test_check );
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 
-		void test_check();
+		// We test nothing here at the moment
 
 	private:
 

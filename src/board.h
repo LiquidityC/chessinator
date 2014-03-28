@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <vector>
 #include "move.h"
 
 namespace cengine
@@ -30,20 +31,33 @@ namespace cengine
 	class Board
 	{
 		private:
+
+			/* Variables */
 			uint64_t pieces[PIECES_SIZE];
+
+			uint64_t white_control;
+			uint64_t black_control;
+
 			bool white_long_castling_available, black_long_castling_available;
 			bool white_short_castling_available, black_short_castling_available;
+
 			bool piece_taken;
 			bool whites_turn;
+
 			Move* last_move;
+			std::vector<Move*> previous_moves;
 
-			Unit get_target_for_move(uint64_t);
+			/* Functions */
+			Unit get_target_for_move(uint64_t) const;
 
+			bool is_castling_move(const Move&) const;
 			void perform_castling_move(const Move&);
 
 			void perform_regular_move(const Move&);
 
 			void check_castling_impact(const Move&);
+
+			void update_board_control();
 
 		public:
 
@@ -69,6 +83,12 @@ namespace cengine
 			Move get_last_move() const { return *last_move; }
 
 			void perform_move(const Move&);
+
+			uint64_t get_white_control() const { return white_control; }
+			uint64_t get_black_control() const { return black_control; }
+
+			bool is_white_in_check() const;
+			bool is_black_in_check() const;
 
 			friend std::ostream& operator<<(std::ostream&, const Board&);
 

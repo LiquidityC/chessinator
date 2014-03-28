@@ -374,9 +374,9 @@ namespace cengine
 
 		bool moved_into_check = false;
 		if (new_board.is_whites_turn()) {
-			moved_into_check = BoardUtil::is_black_in_check(new_board);
+			moved_into_check = new_board.is_black_in_check();
 		} else {
-			moved_into_check = BoardUtil::is_white_in_check(new_board);
+			moved_into_check = new_board.is_white_in_check();
 		}
 
 		if (!moved_into_check) {

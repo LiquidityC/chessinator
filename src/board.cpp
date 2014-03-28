@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "controlcalculator.h"
 #include "board.h"
 #include "move.h"
 
@@ -41,7 +42,10 @@ namespace cengine
 		white_short_castling_available = true;
 		piece_taken = false;
 		whites_turn = true;
+
 		last_move = NULL;
+
+		update_board_control();
 	}
 
 	Board::Board(const Board& board)
@@ -56,7 +60,13 @@ namespace cengine
 		white_long_castling_available = board.is_white_long_castling_available();
 		white_short_castling_available = board.is_white_short_castling_available();
 		piece_taken = board.piece_taken;
-		whites_turn = board.is_whites_turn();
+		whites_turn = board.whites_turn;
+		white_control = board.white_control;
+		black_control = board.black_control;
+
+		for (size_t i = 0; i < board.previous_moves.size(); i++) {
+			previous_moves.push_back(new Move(*board.previous_moves[i]));
+		}
 
 		if (board.last_move != NULL) {
 			last_move = new Move(*board.last_move);
@@ -69,6 +79,13 @@ namespace cengine
 	{
 		if (last_move != NULL) {
 			delete last_move;
+		}
+		if (!previous_moves.empty()) {
+			for (size_t i = 0; i < previous_moves.size(); i++) {
+				delete previous_moves[i];
+				previous_moves[i] = NULL;
+			}
+			previous_moves.clear();
 		}
 	}
 
@@ -85,6 +102,20 @@ namespace cengine
 		white_short_castling_available = board.is_white_short_castling_available();
 		piece_taken = board.piece_taken;
 		whites_turn = board.is_whites_turn();
+		white_control = board.white_control;
+		black_control = board.black_control;
+
+
+		if (!previous_moves.empty()) {
+			for (size_t i = 0; i < previous_moves.size(); i++) {
+				delete previous_moves[i];
+				previous_moves[i] = NULL;
+			}
+			previous_moves.clear();
+		}
+		for (size_t i = 0; i < board.previous_moves.size(); i++) {
+			previous_moves.push_back(new Move(*board.previous_moves[i]));
+		}
 
 		if (last_move != NULL) {
 			delete last_move;
@@ -105,7 +136,7 @@ namespace cengine
 
 	void Board::perform_move(const Move& m)
 	{
-		if (m.is_castling_move()) {
+		if (is_castling_move(m)) {
 			perform_castling_move(m);
 		} else {
 			perform_regular_move(m);
@@ -115,7 +146,23 @@ namespace cengine
 		if(last_move != NULL) {
 			delete last_move;
 		}
+		previous_moves.push_back(new Move(m));
 		last_move = new Move(m);
+	}
+
+	bool Board::is_castling_move(const Move& move) const
+	{
+		if (!move.is_castling_move()) {
+			return false;
+		}
+
+		if (is_whites_turn() && get_target_for_move(move.get_from_bit()) != WHITE_KING) {
+			return false;
+		} else if (!is_whites_turn() && get_target_for_move(move.get_from_bit()) != BLACK_KING) {
+			return false;
+		}
+
+		return true;
 	}
 
 	void Board::perform_castling_move(const Move& m)
@@ -151,8 +198,12 @@ namespace cengine
 		if (mover == PIECES_SIZE) {
 			std::cout << *this << std::endl;
 			std::cout << "Attempted move: " <<  m.as_string() << std::endl;
-			if (last_move != NULL) {
-				std::cout << "Previous move: " <<  last_move->as_string() << std::endl;
+			std::cout << std::hex << "--->\tbits: 0x" << m.get_from_bit() << " 0x" << m.get_to_bit() << std::dec << std::endl;
+			if (!previous_moves.empty()) {
+				for (size_t i = previous_moves.size()-1; i >= 0; i--) {
+					std::cout << "Previous move: " <<  previous_moves[i]->as_string();
+					std::cout << std::hex << "\tbits: 0x" << previous_moves[i]->get_from_bit() << " 0x" << previous_moves[i]->get_to_bit() << std::dec << std::endl;
+				}
 			}
 			std::cout << "WSC: " << white_short_castling_available << std::endl;
 			std::cout << "WLC: " << white_long_castling_available << std::endl;
@@ -200,6 +251,7 @@ namespace cengine
 		}
 
 		check_castling_impact(m);
+		update_board_control();
 	}
 
 	void Board::check_castling_impact(const Move& m)
@@ -238,7 +290,25 @@ namespace cengine
 		}
 	}
 
-	Unit Board::get_target_for_move(uint64_t move)
+	void Board::update_board_control()
+	{
+		ControlCalculator calc;
+
+		white_control = calc.calculate_white_controlzone_for(*this);
+		black_control = calc.calculate_black_controlzone_for(*this);
+	}
+
+	bool Board::is_white_in_check() const
+	{
+		return (black_control & get_pieces_for(WHITE_KING)) != 0;
+	}
+
+	bool Board::is_black_in_check() const
+	{
+		return (white_control & get_pieces_for(BLACK_KING)) != 0;
+	}
+
+	Unit Board::get_target_for_move(uint64_t move) const
 	{
 		for (unsigned int i = WHITE_PAWNS; i <= BLACK_KING; i++) {
 			if ((move & pieces[i]) != 0) {
