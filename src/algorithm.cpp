@@ -9,17 +9,22 @@
 namespace cengine
 {
 
-	Move Algorithm::get_move(const Board& board)
+	Move* Algorithm::get_move(const Board& board)
 	{
 		MoveGenerator mgen;
 
 		mgen.calculate_moves_for(board);
+
+		if (mgen.begin() == mgen.end()) {
+			return NULL;
+		}
+
 		int max = -INT_MAX;
 		Move* best_move = NULL;
 
 		for (auto it = mgen.begin(); it != mgen.end(); it++) {
 			int value = alphabeta(*it, 2, -INT_MAX, INT_MAX, false);
-			if(max < value) {
+			if(max <= value) {
 				max = value;
 
 				if(best_move != NULL) {
@@ -29,11 +34,7 @@ namespace cengine
 			}
 		}
 
-		// Delete the pointer and return the result
-		Move result(*best_move);
-		delete best_move;
-
-		return result;
+		return best_move;
 	}
 
 	int Algorithm::alphabeta(const Board& board, unsigned int depth, int a, int b, bool max_player)

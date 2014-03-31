@@ -50,6 +50,9 @@ namespace cengine {
 			// Nothing
 		} else if (cmd == "rejected")  {
 			//Nothing
+		} else if (cmd == "result")  {
+			// Game over
+			// Do nothing
 		} else {
 			return IoCommand("Error (unknown command): " + cmd);
 		}

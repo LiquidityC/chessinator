@@ -22,15 +22,26 @@ namespace cengine {
 
 			if (c.as_string() == "quit") {
 				break;
+			} else if (c.as_string() == "new") {
+				Board new_board;
+				board = new_board;
 			}
 
 			if (c.is_move()) {
 				Move m = c.get_move();
 				board.perform_move(m);
 
-				Move my_move = algorithm.get_move(board);
-				board.perform_move(my_move);
-				io.send_command(IoCommand("move " + my_move.as_string()));
+				Move* my_move = algorithm.get_move(board);
+				if (my_move == NULL) {
+					// We should be done, Game Over!
+					continue;
+				}
+
+				board.perform_move(*my_move);
+				io.send_command(IoCommand("move " + my_move->as_string()));
+
+				delete my_move;
+
 			} else {
 				io.send_command(handler.parse_command(c));
 			}

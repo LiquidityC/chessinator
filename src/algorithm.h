@@ -18,7 +18,7 @@ namespace cengine
 
 		public:
 
-			Move get_move(const Board&);
+			Move* get_move(const Board&);
 	};
 }
 

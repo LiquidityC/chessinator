@@ -40,7 +40,7 @@ namespace cengine
 
 			std::vector<Board> possible_moves;
 
-			bool attack_only;
+			bool attack_only = false;
 
 		public: // Methods
 

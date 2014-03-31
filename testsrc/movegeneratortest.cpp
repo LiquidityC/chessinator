@@ -19,6 +19,7 @@ void MoveGeneratorTest::test_move()
 	CPPUNIT_ASSERT(test_board("res/testcastlingcheckblock.txt") == 20);
 	CPPUNIT_ASSERT(test_board("res/testblackpieces.txt", false) == 6);
 	CPPUNIT_ASSERT(test_board("res/pawntest.txt", true) == 21);
+	CPPUNIT_ASSERT(test_board("res/testcheckmate.txt") == 0);
 }
 
 int MoveGeneratorTest::test_board(std::string filename, bool whites_turn)
