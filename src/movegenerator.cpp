@@ -275,6 +275,9 @@ namespace cengine
 		uint64_t long_block = 0xE;
 		uint64_t short_block = 0x60;
 
+		uint64_t king_path_short = 0x1C;
+		uint64_t king_path_long = 0x70;
+
 		bool long_castling_available = b.is_white_long_castling_available();
 		bool short_castling_available = b.is_white_short_castling_available();
 
@@ -287,6 +290,9 @@ namespace cengine
 		if (!b.is_whites_turn()) {
 			long_block <<= 56;
 			short_block <<= 56;
+
+			king_path_short <<= 56;
+			king_path_long <<= 56;
 
 			long_castling_available = b.is_black_long_castling_available();
 			short_castling_available = b.is_black_short_castling_available();
@@ -301,12 +307,12 @@ namespace cengine
 		bool short_castling_blocked = 
 			(b.get_pieces_for(ALL_BLACK_PIECES) & short_block) != 0 ||
 			(b.get_pieces_for(ALL_WHITE_PIECES) & short_block) != 0 ||
-			(enemy_control & short_castle_to) != 0;
+			(enemy_control & king_path_short) != 0;
 
 		bool long_castling_blocked = 
 			(b.get_pieces_for(ALL_BLACK_PIECES) & long_block) != 0 ||
 			(b.get_pieces_for(ALL_WHITE_PIECES) & long_block) != 0 ||
-			(enemy_control & long_castle_to) != 0;
+			(enemy_control & king_path_long) != 0;
 
 		if ( !long_castling_blocked && long_castling_available) {
 			add_move(b, castle_from, long_castle_to);
