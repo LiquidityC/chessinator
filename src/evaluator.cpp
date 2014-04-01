@@ -27,38 +27,20 @@ namespace cengine
 			}
 		}
 
-		int white_score = 0;
-		white_score += PAWN_VALUE * count_pieces(b, WHITE_PAWNS);
-		white_score += KNIGHT_VALUE * count_pieces(b, WHITE_KNIGHTS);
-		white_score += BISHOP_VALUE * count_pieces(b, WHITE_BISHOPS);
-		white_score += ROOK_VALUE * count_pieces(b, WHITE_ROOKS);
-		white_score += QUEEN_VALUE * count_pieces(b, WHITE_QUEEN);
-		white_score += KING_VALUE * count_pieces(b, WHITE_KING);
-		white_score += 10 * count_bits(b.get_pieces_for(ALL_BLACK_PIECES) & b.get_white_control());
+		int material_score = 
+			+ PAWN_VALUE * (count_pieces(b, WHITE_PAWNS) - count_pieces(b, BLACK_PAWNS))
+			+ KNIGHT_VALUE * (count_pieces(b, WHITE_KNIGHTS) - count_pieces(b, BLACK_KNIGHTS))
+			+ BISHOP_VALUE * (count_pieces(b, WHITE_BISHOPS) - count_pieces(b, BLACK_BISHOPS))
+			+ ROOK_VALUE * (count_pieces(b, WHITE_ROOKS) - count_pieces(b, BLACK_ROOKS))
+			+ QUEEN_VALUE * (count_pieces(b, WHITE_QUEEN) - count_pieces(b, BLACK_QUEEN))
+			+ KING_VALUE * (count_pieces(b, WHITE_KING) - count_pieces(b, BLACK_KING));
 
-		white_score += b.is_black_in_check() ? 50 : 0;
-		if(count_pieces(b, WHITE_BISHOPS) > 1) {
-			white_score += 50;
-		}
-
-		int black_score = 0;
-		black_score += PAWN_VALUE * count_pieces(b, BLACK_PAWNS);
-		black_score += KNIGHT_VALUE * count_pieces(b, BLACK_KNIGHTS);
-		black_score += BISHOP_VALUE * count_pieces(b, BLACK_BISHOPS);
-		black_score += ROOK_VALUE * count_pieces(b, BLACK_ROOKS);
-		black_score += QUEEN_VALUE * count_pieces(b, BLACK_QUEEN);
-		black_score += KING_VALUE * count_pieces(b, BLACK_KING);
-		black_score += 10 * count_bits(b.get_pieces_for(ALL_WHITE_PIECES) & b.get_black_control());
-
-		black_score += b.is_white_in_check() ? 50 : 0;
-		if(count_pieces(b, BLACK_BISHOPS) > 1) {
-			black_score += 50;
-		}
+		int total_score = material_score;
 
 		if(playing_white) {
-			return white_score - black_score;
+			return total_score;
 		} else {
-			return black_score - white_score;
+			return total_score * -1;
 		}
 	}
 

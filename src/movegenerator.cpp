@@ -275,8 +275,8 @@ namespace cengine
 		uint64_t long_block = 0xE;
 		uint64_t short_block = 0x60;
 
-		uint64_t king_path_short = 0x1C;
-		uint64_t king_path_long = 0x70;
+		uint64_t king_path_short =0x70; 
+		uint64_t king_path_long = 0x1C;
 
 		bool long_castling_available = b.is_white_long_castling_available();
 		bool short_castling_available = b.is_white_short_castling_available();
