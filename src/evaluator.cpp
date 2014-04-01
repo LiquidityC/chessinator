@@ -1,6 +1,7 @@
 #include <climits>
 
 #include "evaluator.h"
+#include "movegenerator.h"
 #include "board.h"
 
 #define PAWN_VALUE		100
@@ -10,12 +11,16 @@
 #define QUEEN_VALUE		975
 #define KING_VALUE		32767
 
+#define MOBILITY_VALUE	10
+
 #define count_bits(pieces) (__builtin_popcount(pieces))
 
 namespace cengine
 {
 	int Evaluator::evaluate(const Board& b, bool max_player, bool no_children)
 	{
+		MoveGenerator mgen;
+
 		bool playing_white = b.is_whites_turn() == max_player;
 		if (no_children) {
 			if (playing_white && b.is_black_in_check()) {
@@ -35,7 +40,16 @@ namespace cengine
 			+ QUEEN_VALUE * (count_pieces(b, WHITE_QUEEN) - count_pieces(b, BLACK_QUEEN))
 			+ KING_VALUE * (count_pieces(b, WHITE_KING) - count_pieces(b, BLACK_KING));
 
-		int total_score = material_score;
+		// TODO: This one isn't good. Can we store the value on board?
+		// Currently it only counts squares that can be moved to, not actual moves.
+		// Generating moves here takes far to long to do, esp. generating moves
+		// for both players.
+		int mobility_score = MOBILITY_VALUE * (
+				count_bits(b.get_white_control() ^ b.get_pieces_for(ALL_WHITE_PIECES)) 
+				- count_bits(b.get_black_control() ^ b.get_pieces_for(ALL_BLACK_PIECES))
+				);
+
+		int total_score = material_score + mobility_score;
 
 		if(playing_white) {
 			return total_score;

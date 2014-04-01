@@ -23,7 +23,7 @@ namespace cengine
 		Move* best_move = NULL;
 
 		for (auto it = mgen.begin(); it != mgen.end(); it++) {
-			int value = alphabeta(*it, 2, -INT_MAX, INT_MAX, false);
+			int value = alphabeta(*it, 3, -INT_MAX, INT_MAX, false);
 			if(max <= value) {
 				max = value;
 

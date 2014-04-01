@@ -11,7 +11,7 @@ namespace cengine
 			static int evaluate(const Board&, bool, bool = false);
 
 		private:
-			static int count_pieces(const Board& b, Unit);
+			static int count_pieces(const Board&, Unit);
 	};
 }
 
