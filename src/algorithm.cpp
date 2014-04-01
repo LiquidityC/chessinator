@@ -84,7 +84,7 @@ namespace cengine
 		mgen.calculate_moves_for(board);
 
 		if (mgen.begin() == mgen.end()) {
-			return Evaluator::evaluate(board, max_player, true);
+			return Evaluator::evaluate(board, max_player);
 		}
 
 		if (max_player) {
